@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guy Desormes — Vistage Chair | CEO Peer Advisory & Strategic Execution</title>
+<meta name="description" content="Guy Desormes is a Vistage Chair serving CEOs of $5M–$50M companies in the Charlotte region. Peer advisory groups, executive coaching, and strategic execution intensives.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f1a14;
+  --forest: #1a3327;
+  --moss: #2d5040;
+  --sage: #4a7860;
+  --gold: #b8943a;
+  --gold-light: #d4ad5a;
+  --gold-pale: #f0e4c4;
+  --cream: #faf7f0;
+  --warm-white: #fdfcf9;
+  --parchment: #f2ede0;
+  --stone: #8a9088;
+  --border: #d8d4c8;
+  --text: #2a3328;
+  --text-mid: #4a5a50;
+  --text-muted: #7a8a7e;
+  --shadow: 0 2px 20px rgba(15,26,20,0.08), 0 1px 4px rgba(15,26,20,0.05);
+  --shadow-lg: 0 20px 60px rgba(15,26,20,0.15), 0 4px 16px rgba(15,26,20,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--warm-white);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 20px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.3s;
+}
+nav.scrolled {
+  background: rgba(250,247,240,0.95);
+  backdrop-filter: blur(12px);
+  padding: 14px 60px;
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.nav-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px; font-weight: 600;
+  color: #fff; text-decoration: none; line-height: 1.2;
+  transition: color 0.3s;
+}
+nav.scrolled .nav-brand { color: var(--forest); }
+.nav-brand span {
+  display: block; font-size: 10px;
+  font-family: 'Instrument Sans', sans-serif; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--gold-light); margin-top: 1px;
+}
+nav.scrolled .nav-brand span { color: var(--gold); }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,0.72); text-decoration: none;
+  letter-spacing: 0.04em; transition: color 0.2s;
+}
+nav.scrolled .nav-links a { color: var(--text-mid); }
+.nav-links a:hover { color: #fff; }
+nav.scrolled .nav-links a:hover { color: var(--forest); }
+.nav-cta {
+  background: var(--gold) !important; color: var(--ink) !important;
+  padding: 10px 22px; border-radius: 3px;
+  font-size: 12.5px !important; font-weight: 600 !important;
+  letter-spacing: 0.06em !important; text-transform: uppercase;
+}
+.nav-cta:hover { background: var(--gold-light) !important; transform: translateY(-1px); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  background: var(--forest);
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 60px 80px;
+  gap: 60px;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 50% 70% at 80% 50%, rgba(184,148,58,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(74,120,96,0.12) 0%, transparent 50%);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.hero-content { position: relative; z-index: 2; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--gold-light); margin-bottom: 28px;
+  opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
+}
+.hero-eyebrow::before {
+  content: ''; display: block; width: 32px; height: 1px; background: var(--gold);
+}
+.hero-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(44px, 5.5vw, 72px); font-weight: 300;
+  color: #fff; line-height: 1.08; letter-spacing: -0.01em;
+  margin-bottom: 24px; opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards;
+}
+.hero-headline em { font-style: italic; color: var(--gold-light); }
+.hero-headline strong { font-weight: 600; display: block; }
+.hero-sub {
+  font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.75;
+  max-width: 520px; margin-bottom: 40px;
+  opacity: 0; animation: fadeUp 0.8s ease 0.6s forwards;
+}
+.hero-actions {
+  display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.8s ease 0.8s forwards;
+}
+.hero-photo-col {
+  position: relative; z-index: 2;
+  opacity: 0; animation: fadeIn 1s ease 1s forwards;
+  display: flex; justify-content: center;
+}
+.hero-photo-frame {
+  position: relative; width: 320px;
+}
+.hero-photo-frame img {
+  width: 100%;
+  border-radius: 4px; display: block; box-shadow: var(--shadow-lg);
+}
+.hero-photo-frame::after { display: none; }
+.hero-badge {
+  position: absolute; bottom: 24px; left: -16px;
+  background: var(--gold); color: var(--ink);
+  padding: 12px 18px; border-radius: 3px;
+  box-shadow: var(--shadow-lg);
+}
+.hero-badge-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.hero-badge-sub { font-size: 10.5px; font-weight: 500; opacity: 0.65; margin-top: 2px; }
+
+/* BUTTONS */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--gold); color: var(--ink);
+  padding: 15px 32px; border-radius: 3px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.07em;
+  text-transform: uppercase; text-decoration: none;
+  transition: all 0.2s; border: none; cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
+}
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,148,58,0.3); }
+.btn-ghost-light {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: rgba(255,255,255,0.65);
+  padding: 15px 24px; border-radius: 3px; font-size: 13px; font-weight: 500;
+  text-decoration: none; border: 1px solid rgba(255,255,255,0.18); transition: all 0.2s;
+}
+.btn-ghost-light:hover { color: #fff; border-color: rgba(255,255,255,0.45); }
+.btn-forest {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--forest); color: #fff;
+  padding: 16px 40px; border-radius: 3px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.07em;
+  text-transform: uppercase; text-decoration: none; transition: all 0.2s;
+  font-family: 'Instrument Sans', sans-serif;
+}
+.btn-forest:hover { background: var(--moss); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+/* SECTION SHARED */
+.section-label {
+  font-size: 10.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--gold); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-label::after { content: ''; display: block; width: 36px; height: 1px; background: var(--gold); }
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 3.5vw, 50px); font-weight: 400;
+  color: var(--forest); line-height: 1.15; letter-spacing: -0.01em;
+}
+.section-title em { font-style: italic; color: var(--gold); }
+
+/* VISTAGE INTRO */
+.section-vistage { background: var(--cream); padding: 100px 60px; }
+.vistage-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 72px;
+  align-items: start; max-width: 1100px; margin: 0 auto;
+}
+.pillar-list { display: flex; flex-direction: column; gap: 0; margin-top: 28px; }
+.pillar-item {
+  display: grid; grid-template-columns: 50px 1fr; gap: 16px;
+  padding: 22px 0; border-bottom: 1px solid var(--border); align-items: start;
+}
+.pillar-item:first-child { padding-top: 0; }
+.pillar-item:last-child { border-bottom: none; }
+.pillar-icon {
+  width: 44px; height: 44px;
+  background: rgba(26,51,39,0.07); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.pillar-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 600; color: var(--forest); margin-bottom: 5px;
+}
+.pillar-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; }
+
+.membership-card {
+  background: var(--forest); border-radius: 6px; overflow: hidden; box-shadow: var(--shadow-lg);
+  position: relative;
+}
+.membership-card::before {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(184,148,58,0.1) 0%, transparent 70%);
+}
+.mc-header {
+  padding: 36px 36px 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.mc-eyebrow { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--gold-light); margin-bottom: 12px; }
+.mc-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; color: #fff; line-height: 1.25; margin-bottom: 10px; }
+.mc-title em { font-style: italic; color: var(--gold-light); }
+.mc-desc { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+.mc-types { padding: 24px 36px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 10px; }
+.mc-type {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.05); border-radius: 4px;
+  border-left: 3px solid var(--gold);
+}
+.mc-type-title { font-size: 13.5px; font-weight: 600; color: #fff; line-height: 1.2; }
+.mc-type-desc { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.mc-cta { padding: 24px 36px; }
+
+/* ABOUT */
+.section-about { background: var(--warm-white); padding: 100px 60px; }
+.about-layout {
+  display: grid; grid-template-columns: 360px 1fr; gap: 72px;
+  align-items: center; max-width: 1100px; margin: 0 auto;
+}
+.about-photo-wrap { position: relative; }
+.about-photo-frame { position: relative; border-radius: 4px; overflow: hidden; }
+.about-photo-frame img { width: 100%; display: block; }
+.about-quote {
+  margin-top: 20px; padding: 18px 22px;
+  background: var(--forest); border-left: 3px solid var(--gold); border-radius: 4px;
+  font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic;
+  color: rgba(255,255,255,0.75); line-height: 1.6;
+}
+.cred-list { display: flex; flex-direction: column; gap: 12px; margin: 22px 0 30px; }
+.cred-item { display: flex; gap: 12px; align-items: flex-start; }
+.cred-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; flex-shrink: 0; margin-top: 8px; }
+.cred-text { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
+
+/* Fortune 500 strip */
+.f500-strip {
+  background: var(--parchment);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 4px;
+  padding: 16px 20px;
+}
+.f500-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--text-muted); margin-bottom: 10px;
+}
+.f500-logos {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+.f500-name {
+  font-size: 13px; font-weight: 600; color: var(--forest);
+  white-space: nowrap;
+}
+.f500-dot { color: var(--gold); font-weight: 700; }
+
+/* TESTIMONIALS */
+.section-testimonials { background: var(--parchment); padding: 100px 60px; }
+.testimonials-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 20px; margin-top: 48px; max-width: 1100px; margin-left: auto; margin-right: auto;
+}
+.testimonial {
+  background: var(--warm-white); border: 1px solid var(--border); border-radius: 4px;
+  padding: 32px; box-shadow: var(--shadow); position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.testimonial:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.testimonial::before {
+  content: '\201C';
+  font-family: 'Cormorant Garamond', serif; font-size: 80px;
+  color: var(--gold-pale); position: absolute; top: 8px; left: 18px; line-height: 1;
+}
+.testimonial-text {
+  font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic;
+  color: var(--text); line-height: 1.65; margin-bottom: 20px; padding-top: 16px;
+}
+.testimonial-author { font-size: 12.5px; font-weight: 600; color: var(--forest); text-transform: uppercase; letter-spacing: 0.07em; }
+.testimonial-role { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+/* STATS */
+.section-stats {
+  background: var(--parchment);
+  padding: 100px 60px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  background: var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.stat-card {
+  background: var(--warm-white);
+  padding: 36px 28px;
+  text-align: center;
+  transition: background 0.2s;
+}
+.stat-card:hover { background: #fff; }
+.stat-year {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--gold); margin-bottom: 14px;
+}
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 58px; font-weight: 300; color: var(--forest);
+  line-height: 1; margin-bottom: 14px;
+}
+.stat-unit {
+  font-size: 32px; opacity: 0.6;
+}
+.stat-desc {
+  font-size: 13px; color: var(--text-muted); line-height: 1.6;
+}
+.stat-desc strong { color: var(--forest); }
+
+@media (max-width: 960px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .section-stats { padding: 72px 24px; }
+}
+.section-hoshin { background: var(--ink); padding: 100px 60px; position: relative; overflow: hidden; }
+.section-hoshin::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 60% at 80% 50%, rgba(184,148,58,0.06) 0%, transparent 60%);
+}
+.hoshin-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 72px;
+  align-items: center; max-width: 1100px; margin: 0 auto;
+}
+.hoshin-features { display: flex; flex-direction: column; gap: 0; margin-top: 28px; }
+.hoshin-feature {
+  display: flex; gap: 16px; padding: 18px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07); align-items: flex-start;
+}
+.hoshin-feature:last-child { border-bottom: none; }
+.hf-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300;
+  color: var(--gold); line-height: 1; flex-shrink: 0; width: 28px;
+}
+.hf-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 3px; }
+.hf-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.55; }
+
+.hoshin-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden;
+}
+.hc-top { padding: 30px 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.hc-eyebrow { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--gold-light); margin-bottom: 10px; }
+.hc-name { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; color: #fff; line-height: 1.2; margin-bottom: 4px; }
+.hc-sub { font-size: 13px; color: rgba(255,255,255,0.38); }
+.hc-price { padding: 22px 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.hc-price-num { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; color: #fff; line-height: 1; }
+.hc-price-note { font-size: 12px; color: rgba(255,255,255,0.32); margin-top: 4px; }
+.hc-includes { padding: 22px 32px; }
+.hc-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 11px; font-size: 13px; color: rgba(255,255,255,0.58); line-height: 1.5; }
+.hc-item:last-child { margin-bottom: 0; }
+.hc-check { width: 16px; height: 16px; background: rgba(184,148,58,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--gold-light); flex-shrink: 0; margin-top: 1px; }
+.hc-cta { padding: 18px 32px; background: rgba(0,0,0,0.2); }
+
+/* CTA */
+.section-cta {
+  background: var(--cream); padding: 100px 60px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.section-cta::before {
+  content: 'VISTAGE';
+  position: absolute; font-family: 'Cormorant Garamond', serif;
+  font-size: 220px; font-weight: 700; color: rgba(26,51,39,0.035);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  white-space: nowrap; pointer-events: none; letter-spacing: 0.1em;
+}
+.cta-inner { position: relative; max-width: 600px; margin: 0 auto; }
+.cta-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 5vw, 58px); font-weight: 400; color: var(--forest);
+  line-height: 1.1; margin-bottom: 18px;
+}
+.cta-title em { font-style: italic; color: var(--gold); }
+.cta-sub { font-size: 15px; color: var(--text-muted); line-height: 1.75; margin-bottom: 40px; }
+.cta-buttons { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.cta-divider { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 320px; }
+.cta-divider::before, .cta-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.cta-divider span { font-size: 11px; color: var(--stone); text-transform: uppercase; letter-spacing: 0.1em; }
+.cta-note { font-size: 12px; color: var(--text-muted); }
+
+/* FOOTER */
+footer {
+  background: var(--ink); padding: 44px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; color: rgba(255,255,255,0.55); }
+.footer-brand span { display: block; font-size: 10px; font-family: 'Instrument Sans',sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin-top: 2px; }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 12px; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: rgba(255,255,255,0.65); }
+.footer-copy { font-size: 12px; color: rgba(255,255,255,0.22); }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity:0; transform:translateY(24px);} to {opacity:1;transform:translateY(0);} }
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+.reveal { opacity:0; transform:translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1 { transition-delay:0.1s; }
+.reveal-delay-2 { transition-delay:0.2s; }
+.reveal-delay-3 { transition-delay:0.3s; }
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  nav { padding: 16px 24px; }
+  nav.scrolled { padding: 12px 24px; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; }
+  .hero-photo-col { display: none; }
+  .section-vistage, .section-about, .section-testimonials,
+  .section-hoshin, .section-cta { padding: 72px 24px; }
+  .vistage-layout, .about-layout, .hoshin-layout { grid-template-columns: 1fr; gap: 48px; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 16px; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-brand">
+    Guy Desormes
+    <span>Vistage Chair · Charlotte</span>
+  </a>
+  <div class="nav-links">
+    <a href="#vistage">Vistage Membership</a>
+    <a href="#about">About Guy</a>
+    <a href="#hoshin">Strategic Planning</a>
+    <a href="#contact" class="nav-cta">Get in Touch</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Vistage Chair · Charlotte Region</div>
+    <h1 class="hero-headline">
+      The best CEOs<br>
+      don't lead alone.<br>
+      <em>They lead better</em><br>
+      <strong>together.</strong>
+    </h1>
+    <p class="hero-sub">
+      I'm Guy Desormes, a Vistage Chair serving CEOs and business owners in the Charlotte region. With 20+ years of Fortune 500 executive experience and the perspective of an entrepreneur, I help leaders build organizations where growth never stops and continuous improvement is a capability — not just a project.
+    </p>
+    <div class="hero-actions">
+      <a href="#vistage" class="btn-primary">Learn About Vistage →</a>
+      <a href="#about" class="btn-ghost-light">About Guy</a>
+    </div>
+  </div>
+  <div class="hero-photo-col">
+    <div class="hero-photo-frame">
+      <img src="photo.png" alt="Guy Desormes — Vistage Chair">
+      <div class="hero-badge">
+        <div class="hero-badge-title">Vistage Chair</div>
+        <div class="hero-badge-sub">Charlotte Region</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISTAGE -->
+<section class="section-vistage" id="vistage">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="vistage-layout">
+      <div class="reveal">
+        <div class="section-label">What is Vistage</div>
+        <h2 class="section-title" style="margin-bottom:20px">
+          A confidential board<br>
+          of advisors — <em>built<br>
+          for your stage</em>
+        </h2>
+        <p style="font-size:15px;color:var(--text-mid);line-height:1.75;margin-bottom:16px">
+          Vistage is the world's largest CEO peer advisory organization. Once a month, you sit in a room with 12–16 non-competing executives who have one purpose: to help each other make better decisions, grow faster, and lead with more clarity.
+        </p>
+        <p style="font-size:15px;color:var(--text-mid);line-height:1.75;margin-bottom:32px">
+          It's not a networking group. It's not a conference. It's the closest thing to having a board of directors that actually knows your business — and tells you the truth.
+        </p>
+        <div class="pillar-list">
+          <div class="pillar-item">
+            <div class="pillar-icon">🤝</div>
+            <div>
+              <div class="pillar-title">Monthly Peer Advisory Group</div>
+              <p class="pillar-desc">Full-day confidential meeting with 12–16 non-competing CEOs. Candid. Focused on your real challenges — not surface-level networking.</p>
+            </div>
+          </div>
+          <div class="pillar-item">
+            <div class="pillar-icon">🎯</div>
+            <div>
+              <div class="pillar-title">1-on-1 Executive Coaching</div>
+              <p class="pillar-desc">Monthly private session with me — your Chair — focused entirely on your business, your leadership, and what's keeping you up at night.</p>
+            </div>
+          </div>
+          <div class="pillar-item">
+            <div class="pillar-icon">🧠</div>
+            <div>
+              <div class="pillar-title">Expert Speaker Sessions</div>
+              <p class="pillar-desc">World-class speakers on leadership, strategy, operations, finance, and more — curated for your group's specific stage and challenges.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <div class="membership-card">
+          <div class="mc-header">
+            <div class="mc-eyebrow">Membership is by invitation</div>
+            <div class="mc-title">Built for CEOs who are<br><em>ready to grow</em></div>
+            <p class="mc-desc" style="font-size:13.5px;color:rgba(255,255,255,0.55);line-height:1.65;margin-top:10px">Guy personally selects members to ensure the group dynamic is right — diverse industries, no direct competitors, and leaders committed to growth.</p>
+          </div>
+          <div class="mc-types">
+            <div class="mc-type">
+              <div>
+                <div class="mc-type-title">CEO / President Group</div>
+                <div class="mc-type-desc">Companies $5M+ · Final decision maker · 10+ employees</div>
+              </div>
+            </div>
+            <div class="mc-type">
+              <div>
+                <div class="mc-type-title">Small Business Group</div>
+                <div class="mc-type-desc">Companies $1M–$5M · Ambitious owners at the next inflection</div>
+              </div>
+            </div>
+            <div class="mc-type">
+              <div>
+                <div class="mc-type-title">Key Executive Group</div>
+                <div class="mc-type-desc">C-suite & senior leaders who report directly to the CEO</div>
+              </div>
+            </div>
+          </div>
+          <div class="mc-cta">
+            <a href="#contact" class="btn-primary" style="width:100%;justify-content:center">
+              Inquire About Membership →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section-about" id="about">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="about-layout">
+      <div class="reveal">
+        <div class="about-photo-wrap">
+          <div class="about-photo-frame">
+            <img src="photo.png" alt="Guy Desormes">
+          </div>
+          <div class="about-quote">"I now provide what I wished I'd had — a community where CEOs help others see paths forward they could not see alone."</div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="section-label">About Guy Desormes</div>
+        <h2 class="section-title" style="margin-bottom:20px">
+          20 years bridging<br>
+          <em>strategy and execution</em><br>
+          from the inside
+        </h2>
+        <p style="font-size:15px;color:var(--text-mid);line-height:1.75;margin-bottom:16px">
+          Guy arrived in the US at 17 with almost no English. He worked his way through school, earned a Chemical Engineering degree, and spent the next two decades leading transformation at the highest levels of American business — Fortune 500 executive roles across pharmaceuticals, financial services, and hospitality.
+        </p>
+        <p style="font-size:15px;color:var(--text-mid);line-height:1.75;margin-bottom:16px">
+          When he left corporate to run a private investment firm across hospitality, real estate, and vacation rentals, he experienced the isolation every entrepreneur knows. He searched for peer support and found nothing that fit. That gap is why he became a Vistage Chair.
+        </p>
+        <p style="font-size:15px;color:var(--text-mid);line-height:1.75;margin-bottom:24px">
+          Guy is a Lean Sigma Master Black Belt who combines operational rigor with people-centered leadership. His real differentiator: sustainable results require capable teams who <em>take ownership</em> of change — not consultants who impose it on them.
+        </p>
+
+        <!-- Fortune 500 strip -->
+        <div class="f500-strip">
+          <div class="f500-label">Executive experience at</div>
+          <div class="f500-logos">
+            <div class="f500-name">Mylan Pharmaceuticals</div>
+            <div class="f500-dot">·</div>
+            <div class="f500-name">Wells Fargo</div>
+            <div class="f500-dot">·</div>
+            <div class="f500-name">Bank of America</div>
+            <div class="f500-dot">·</div>
+            <div class="f500-name">Wyndham Worldwide</div>
+          </div>
+        </div>
+
+        <div class="cred-list" style="margin-top:24px">
+          <div class="cred-item"><div class="cred-dot"></div><div class="cred-text">Vistage Chair — Charlotte region peer advisory groups for CEOs and business owners</div></div>
+          <div class="cred-item"><div class="cred-dot"></div><div class="cred-text">Lean Sigma Master Black Belt — 20+ years of operational excellence and business transformation</div></div>
+          <div class="cred-item"><div class="cred-dot"></div><div class="cred-text">Entrepreneur — private investment firm across hospitality, real estate, and vacation rentals</div></div>
+          <div class="cred-item"><div class="cred-dot"></div><div class="cred-text">Certified Hoshin Kanri facilitator — strategic planning intensives for leadership teams</div></div>
+        </div>
+        <a href="#contact" class="btn-primary" style="margin-top:28px;display:inline-flex">Inquire About Membership →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="section-stats">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="section-label reveal" style="justify-content:center">Proven Results</div>
+    <h2 class="section-title reveal reveal-delay-1" style="text-align:center;margin-bottom:10px">
+      Vistage members don't just survive<br>
+      <em>difficult times — they grow through them</em>
+    </h2>
+    <p class="reveal reveal-delay-2" style="text-align:center;font-size:14px;color:var(--text-muted);margin-bottom:52px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7">In recessions, pandemics, and periods of uncertainty, Vistage member companies consistently outperform their peers.</p>
+
+    <div class="stats-grid reveal reveal-delay-2">
+      <div class="stat-card">
+        <div class="stat-year">2008</div>
+        <div class="stat-num">+5.8<span class="stat-unit">%</span></div>
+        <div class="stat-desc">Vistage member companies grew while non-members shrank <strong>9.2%</strong> during the financial crisis</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-year">2017</div>
+        <div class="stat-num">2.2<span class="stat-unit">×</span></div>
+        <div class="stat-desc">Vistage member companies grew <strong>2.2× faster</strong> than comparable non-member businesses</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-year">2020</div>
+        <div class="stat-num">+4.6<span class="stat-unit">%</span></div>
+        <div class="stat-desc">Vistage members grew during COVID while non-member companies shrank <strong>4.7%</strong></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-year">2025</div>
+        <div class="stat-num">4<span class="stat-unit">×</span></div>
+        <div class="stat-desc">Most U.S. businesses fail within 5 years. Vistage member companies average <strong>21+ years</strong> of success</div>
+      </div>
+    </div>
+    <p class="reveal reveal-delay-3" style="text-align:center;font-size:11.5px;color:var(--text-muted);margin-top:28px">Source: Vistage Worldwide research</p>
+  </div>
+</section>
+
+<!-- HOSHIN -->
+<section class="section-hoshin" id="hoshin">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="hoshin-layout">
+      <div class="reveal">
+        <div style="font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.18em;color:var(--gold-light);margin-bottom:16px;display:flex;align-items:center;gap:10px">Additional Service <span style="display:inline-block;width:32px;height:1px;background:var(--gold)"></span></div>
+        <h2 class="section-title" style="color:#fff;margin-bottom:16px">
+          Hoshin Planning<br>
+          <em style="color:var(--gold-light)">Accelerator</em>
+        </h2>
+        <p style="font-size:15px;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:12px">
+          Vistage helps you get clear on what to fix. The Hoshin Planning Accelerator gives your leadership team the system to actually fix it.
+        </p>
+        <p style="font-size:15px;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:28px">
+          A 2-day working session where your team builds a complete operating plan — vision through target actions — and leaves with a review cadence to keep it alive. Facilitated by Guy, who already knows your business.
+        </p>
+        <div class="hoshin-features">
+          <div class="hoshin-feature">
+            <div class="hf-num">1</div>
+            <div><div class="hf-title">Complete plan built live in the room</div><p class="hf-desc">Not homework to finish later. You leave Day 2 with a finished, executable plan your whole team believes in.</p></div>
+          </div>
+          <div class="hoshin-feature">
+            <div class="hf-num">2</div>
+            <div><div class="hf-title">AI Planning Builder tool included</div><p class="hf-desc">Software your team uses to track progress, flag variances, and run monthly reviews — between sessions.</p></div>
+          </div>
+          <div class="hoshin-feature">
+            <div class="hf-num">3</div>
+            <div><div class="hf-title">Facilitated by your Vistage Chair</div><p class="hf-desc">Guy knows your business, your team dynamics, and your blind spots. That context makes every session sharper than a generic facilitator.</p></div>
+          </div>
+          <div class="hoshin-feature">
+            <div class="hf-num">4</div>
+            <div><div class="hf-title">30-day follow-up review call</div><p class="hf-desc">We join your first monthly check-in to make sure the system is running and catch early issues before they compound.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="hoshin-card">
+          <div class="hc-top">
+            <div class="hc-eyebrow">Hoshin Planning Accelerator</div>
+            <div class="hc-name">2-Day Leadership Intensive</div>
+            <div class="hc-sub">6–12 participants · Virtual or on-site</div>
+          </div>
+          <div class="hc-price">
+            <div class="hc-price-num">$2,500<span style="font-size:18px;opacity:0.4"> /person</span></div>
+            <div class="hc-price-note">Minimum 6 participants · All materials included</div>
+          </div>
+          <div class="hc-includes">
+            <div class="hc-item"><div class="hc-check">✓</div>Pre-session diagnostic call with CEO</div>
+            <div class="hc-item"><div class="hc-check">✓</div>2 full days of facilitated working sessions</div>
+            <div class="hc-item"><div class="hc-check">✓</div>Complete Hoshin Plan — vision through target actions</div>
+            <div class="hc-item"><div class="hc-check">✓</div>AI Planning Builder tool (yours to keep)</div>
+            <div class="hc-item"><div class="hc-check">✓</div>Monthly review templates and cadence design</div>
+            <div class="hc-item"><div class="hc-check">✓</div>30-day follow-up review call</div>
+          </div>
+          <div class="hc-cta">
+            <a href="assess.html" class="btn-primary" style="width:100%;justify-content:center">
+              Take the Free Assessment →
+            </a>
+            <p style="font-size:11px;color:rgba(255,255,255,0.28);text-align:center;margin-top:10px">3-min readiness assessment · Instant personalized results</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-cta" id="contact">
+  <div class="cta-inner">
+    <div class="section-label reveal" style="justify-content:center">Let's Talk</div>
+    <h2 class="cta-title reveal reveal-delay-1">
+      Ready to stop<br>
+      <em>leading alone?</em>
+    </h2>
+    <p class="cta-sub reveal reveal-delay-2">
+      Whether you're curious about Vistage membership or want to explore a strategic planning intensive, the first step is a conversation. No pitch, no pressure — just an honest discussion about whether this is the right fit for you.
+    </p>
+    <div class="cta-buttons reveal reveal-delay-3">
+      <a href="#" class="btn-forest" onclick="alert('Replace with your Calendly link')">
+        Book a 30-Min Call with Guy →
+      </a>
+      <div class="cta-divider"><span>or</span></div>
+      <a href="assess.html" class="btn-primary">
+        Take the Free Execution Assessment →
+      </a>
+      <p class="cta-note">3 minutes · Instant results · No commitment</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    Guy Desormes
+    <span>Vistage Chair · Charlotte Region</span>
+  </div>
+  <div class="footer-links">
+    <a href="#vistage">Vistage</a>
+    <a href="#about">About</a>
+    <a href="#hoshin">Strategic Planning</a>
+    <a href="assess.html">Free Assessment</a>
+  </div>
+  <div class="footer-copy">© 2025 · Guy Desormes · All rights reserved</div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
