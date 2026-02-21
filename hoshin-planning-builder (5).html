@@ -1,0 +1,3239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hoshin Planning Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D2137;
+    --navy-mid: #152d4a;
+    --cobalt: #1B4F8A;
+    --cobalt-light: #2563b0;
+    --sky: #3b82c4;
+    --gold: #C8921A;
+    --gold-light: #e4a93a;
+    --ice: #ddeeff;
+    --off-white: #F7F9FC;
+    --mist: #e8eef6;
+    --slate: #4A6274;
+    --slate-light: #6b8296;
+    --green: #166534;
+    --green-light: #16a34a;
+    --red: #991b1b;
+    --red-light: #dc2626;
+    --text: #1a2e3d;
+    --text-muted: #5a7080;
+    --border: #c8d8e8;
+    --border-light: #e2eaf2;
+    --shadow-sm: 0 1px 3px rgba(13,33,55,0.08), 0 1px 2px rgba(13,33,55,0.05);
+    --shadow-md: 0 4px 16px rgba(13,33,55,0.12), 0 2px 6px rgba(13,33,55,0.07);
+    --shadow-lg: 0 12px 40px rgba(13,33,55,0.16), 0 4px 12px rgba(13,33,55,0.08);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── SIDEBAR ── */
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .sidebar-logo .wordmark {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+
+  .sidebar-logo .tagline {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 4px;
+  }
+
+  .nav-section-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.3);
+    padding: 20px 24px 8px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.55);
+    font-size: 13.5px;
+    font-weight: 400;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+    position: relative;
+  }
+
+  .nav-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.05); }
+
+  .nav-item.active {
+    color: #fff;
+    background: rgba(200, 146, 26, 0.15);
+    border-left-color: var(--gold);
+    font-weight: 500;
+  }
+
+  .nav-item .nav-num {
+    width: 22px; height: 22px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .nav-item.active .nav-num { background: var(--gold); color: var(--navy); }
+  .nav-item.complete .nav-num { background: var(--green-light); color: #fff; }
+
+  .nav-item .check { position: absolute; right: 16px; font-size: 11px; opacity: 0.7; }
+
+  .sidebar-progress {
+    margin-top: auto;
+    padding: 20px 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .progress-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .progress-bar-bg {
+    background: rgba(255,255,255,0.1);
+    border-radius: 99px;
+    height: 4px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-pct {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .topbar {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .topbar-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .topbar-breadcrumb .sep { opacity: 0.4; }
+  .topbar-breadcrumb .current { color: var(--text); font-weight: 500; }
+
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--slate);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--mist); border-color: var(--cobalt); color: var(--cobalt); }
+
+  .btn-primary {
+    background: var(--cobalt);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--cobalt-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(27,79,138,0.3); }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #fff;
+  }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+  /* ── PAGE CONTENT ── */
+  .page { display: none; flex: 1; flex-direction: column; }
+  .page.active { display: flex; }
+
+  .page-header {
+    padding: 36px 40px 28px;
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .page-eyebrow {
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  .page-body { padding: 32px 40px; flex: 1; overflow-y: auto; }
+
+  /* ── FORM ELEMENTS ── */
+  .form-section {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .form-section-header {
+    padding: 16px 24px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .form-section-header .icon {
+    width: 30px; height: 30px;
+    background: rgba(200,146,26,0.25);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+
+  .form-section-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .form-section-header .section-hint {
+    margin-left: auto;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    font-style: italic;
+  }
+
+  .form-section-body { padding: 24px; }
+
+  .form-grid { display: grid; gap: 18px; }
+  .form-grid-2 { grid-template-columns: 1fr 1fr; }
+  .form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .form-label .required { color: var(--gold); margin-left: 3px; }
+  .form-label .hint { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--text-muted); font-size: 11.5px; margin-left: 4px; }
+
+  .form-input, .form-textarea, .form-select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--off-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    transition: all 0.15s;
+    width: 100%;
+    outline: none;
+  }
+
+  .form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--cobalt);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(27,79,138,0.1);
+  }
+
+  .form-textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+
+  .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234A6274' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  .form-hint {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-accent { border-left: 4px solid var(--cobalt); }
+  .card-gold { border-left: 4px solid var(--gold); }
+  .card-green { border-left: 4px solid var(--green-light); }
+
+  /* ── OBJECTIVE ROW ── */
+  .objective-card {
+    background: #fff;
+    border: 1.5px solid var(--border-light);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+
+  .objective-card:hover { box-shadow: var(--shadow-md); }
+
+  .objective-card-header {
+    padding: 14px 20px;
+    background: var(--mist);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .obj-num {
+    width: 28px; height: 28px;
+    background: var(--cobalt);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .obj-type-badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 99px;
+    background: rgba(27,79,138,0.12);
+    color: var(--cobalt);
+  }
+
+  .obj-type-badge.annual { background: rgba(200,146,26,0.15); color: #996600; }
+  .obj-type-badge.development { background: rgba(22,101,52,0.12); color: var(--green); }
+
+  .obj-remove {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--slate-light);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .obj-remove:hover { background: #fee2e2; color: var(--red-light); }
+
+  .objective-card-body { padding: 20px; }
+
+  /* ── ACTION ITEMS ── */
+  .action-row {
+    display: grid;
+    grid-template-columns: 36px 1fr 140px 140px 120px 32px;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .action-row:last-child { border-bottom: none; }
+
+  .action-letter {
+    width: 28px; height: 28px;
+    background: var(--navy);
+    color: var(--gold-light);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .action-remove {
+    background: none;
+    border: none;
+    color: var(--slate-light);
+    cursor: pointer;
+    font-size: 15px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .action-remove:hover { background: #fee2e2; color: var(--red-light); }
+
+  /* ── MATRIX PREVIEW ── */
+  .matrix-container { overflow-x: auto; }
+
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    min-width: 700px;
+  }
+
+  .matrix-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .matrix-table th.gold { background: var(--gold); }
+
+  .matrix-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-light);
+    vertical-align: middle;
+  }
+
+  .matrix-table tr:nth-child(even) td { background: var(--off-white); }
+
+  .matrix-table .measure-cat {
+    font-size: 10.5px;
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .cat-1 { background: #dbeafe; color: #1e40af; }
+  .cat-2 { background: #dcfce7; color: #166534; }
+  .cat-3 { background: #fef3c7; color: #92400e; }
+  .cat-4 { background: #fee2e2; color: #991b1b; }
+  .cat-5 { background: #f3e8ff; color: #6b21a8; }
+  .cat-6 { background: #e0f2fe; color: #075985; }
+
+  .x-mark {
+    width: 20px; height: 20px;
+    background: var(--cobalt);
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    color: #fff;
+    margin: auto;
+    transition: all 0.12s;
+  }
+
+  .x-mark.empty {
+    background: var(--off-white);
+    border: 1.5px dashed var(--border);
+    color: transparent;
+  }
+
+  .x-mark:hover { transform: scale(1.15); }
+
+  /* ── REVIEW SECTION ── */
+  .review-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .review-card {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .review-card-header {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .review-card-header.monthly { background: var(--navy); }
+  .review-card-header.quarterly { background: var(--cobalt); }
+  .review-card-header.annual { background: var(--gold); }
+
+  .review-card-header .label {
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .review-card-header .freq {
+    color: rgba(255,255,255,0.65);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+  }
+
+  .review-card-body { padding: 16px 18px; }
+
+  .review-checklist { display: flex; flex-direction: column; gap: 10px; }
+
+  .review-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .review-check input[type="checkbox"] {
+    width: 16px; height: 16px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--cobalt);
+    flex-shrink: 0;
+  }
+
+  .review-check label {
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    line-height: 1.4;
+  }
+
+  .review-check input:checked + label { text-decoration: line-through; color: var(--text-muted); }
+
+  /* ── SUMMARY / EXPORT ── */
+  .summary-hero {
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 32px;
+    color: #fff;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .summary-hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(200,146,26,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .summary-hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .summary-hero p {
+    font-size: 13.5px;
+    opacity: 0.7;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+
+  .summary-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .export-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .export-card {
+    background: #fff;
+    border: 1.5px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .export-card:hover { border-color: var(--cobalt); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+  .export-icon { font-size: 28px; margin-bottom: 10px; }
+  .export-title { font-weight: 600; font-size: 14px; color: var(--navy); margin-bottom: 4px; }
+  .export-desc { font-size: 12px; color: var(--text-muted); }
+
+  /* ── INLINE TABS ── */
+  .tab-group {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--border-light);
+    margin-bottom: 24px;
+  }
+
+  .tab-item {
+    padding: 10px 20px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s;
+  }
+
+  .tab-item:hover { color: var(--cobalt); }
+  .tab-item.active { color: var(--cobalt); border-bottom-color: var(--cobalt); font-weight: 600; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── CHIPS / BADGES ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-navy { background: rgba(13,33,55,0.08); color: var(--navy); }
+  .badge-cobalt { background: rgba(27,79,138,0.12); color: var(--cobalt); }
+  .badge-gold { background: rgba(200,146,26,0.15); color: var(--gold); }
+  .badge-green { background: rgba(22,163,74,0.12); color: var(--green); }
+
+  /* ── ADD BUTTON ROW ── */
+  .add-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--slate);
+    font-size: 13px;
+    transition: all 0.15s;
+    background: transparent;
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .add-row:hover { border-color: var(--cobalt); color: var(--cobalt); background: rgba(27,79,138,0.03); }
+
+  /* ── TOOLTIP INFO ── */
+  .info-box {
+    background: linear-gradient(135deg, #eef4fd, #e4edf8);
+    border: 1px solid #b8d0ef;
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--navy);
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  .info-box strong { color: var(--cobalt); }
+
+  /* ── INTRO / WELCOME ── */
+  .welcome-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .welcome-card {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.15s;
+  }
+
+  .welcome-card:hover { box-shadow: var(--shadow-md); }
+
+  .welcome-card .step-num {
+    width: 36px; height: 36px;
+    background: var(--navy);
+    color: var(--gold-light);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .welcome-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .welcome-card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  .start-banner {
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .start-banner-text h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .start-banner-text p {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.55;
+  }
+
+  .start-banner .btn-gold { margin-left: auto; flex-shrink: 0; padding: 12px 28px; font-size: 14px; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--slate-light); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+    .welcome-grid { grid-template-columns: 1fr; }
+    .summary-stats { grid-template-columns: repeat(2, 1fr); }
+    .review-grid { grid-template-columns: 1fr; }
+    .export-options { grid-template-columns: 1fr; }
+    .action-row { grid-template-columns: 36px 1fr 32px; }
+    .action-row .action-who, .action-row .action-when, .action-row .action-pct { display: none; }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SAVE INDICATOR ── */
+  .save-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 99px;
+    background: var(--off-white);
+    border: 1px solid var(--border-light);
+    transition: all 0.3s;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .save-indicator.saving {
+    color: var(--gold);
+    border-color: rgba(200,146,26,0.3);
+    background: rgba(200,146,26,0.06);
+  }
+
+  .save-indicator.saved {
+    color: var(--green-light);
+    border-color: rgba(22,163,74,0.3);
+    background: rgba(22,163,74,0.06);
+  }
+
+  .save-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+
+  .save-indicator.saving .save-dot {
+    background: var(--gold);
+    animation: pulse 0.8s infinite;
+  }
+
+  .save-indicator.saved .save-dot { background: var(--green-light); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(13,33,55,0.55);
+    backdrop-filter: blur(3px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: #fff;
+    border-radius: 14px;
+    width: 560px;
+    max-width: calc(100vw - 40px);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(16px);
+    transition: transform 0.2s;
+    overflow: hidden;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-header {
+    background: var(--navy);
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .modal-header .modal-close {
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: rgba(255,255,255,0.7);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .modal-header .modal-close:hover { background: rgba(255,255,255,0.22); color: #fff; }
+
+  .modal-body { padding: 28px; }
+
+  .modal-step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .modal-step:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .modal-step-num {
+    width: 28px; height: 28px;
+    background: var(--cobalt);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .modal-step-content h4 {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  .modal-step-content p {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .modal-step-content code {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--mist);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--navy);
+    display: block;
+    margin-top: 6px;
+    line-height: 1.6;
+    word-break: break-all;
+  }
+
+  .modal-footer {
+    padding: 16px 28px;
+    background: var(--off-white);
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--navy);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    z-index: 200;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { background: var(--green); }
+  .toast.warning { background: var(--gold); }
+
+  /* ── AI REVIEWER ── */
+  .scope-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border-radius: 99px;
+    border: 1.5px solid var(--border);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--slate);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--off-white);
+    user-select: none;
+  }
+
+  .scope-chip input { display: none; }
+  .scope-chip.active {
+    border-color: var(--cobalt);
+    background: rgba(27,79,138,0.08);
+    color: var(--cobalt);
+    font-weight: 600;
+  }
+  .scope-chip:hover { border-color: var(--cobalt); }
+
+  .finding-card {
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    animation: fadeIn 0.3s ease both;
+  }
+
+  .finding-card-header {
+    padding: 13px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .finding-card-header.critical { background: #fef2f2; border-left: 4px solid var(--red-light); }
+  .finding-card-header.warning  { background: #fffbeb; border-left: 4px solid var(--gold); }
+  .finding-card-header.good     { background: #f0fdf4; border-left: 4px solid var(--green-light); }
+  .finding-card-header.info     { background: #eff6ff; border-left: 4px solid var(--sky); }
+
+  .finding-severity {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 2px 8px;
+    border-radius: 99px;
+    flex-shrink: 0;
+  }
+
+  .sev-critical { background: #fee2e2; color: var(--red); }
+  .sev-warning  { background: #fef3c7; color: #92400e; }
+  .sev-good     { background: #dcfce7; color: var(--green); }
+  .sev-info     { background: #dbeafe; color: #1e40af; }
+
+  .finding-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--navy);
+    flex: 1;
+  }
+
+  .finding-body {
+    padding: 14px 18px;
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-top: none;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .finding-fix {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: var(--mist);
+    border-radius: var(--radius-sm);
+    font-size: 12.5px;
+    color: var(--navy);
+    border-left: 3px solid var(--cobalt);
+  }
+
+  .finding-fix strong { color: var(--cobalt); }
+
+  .score-ring-wrap {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    color: #fff;
+  }
+
+  .score-ring {
+    width: 90px; height: 90px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .score-ring svg { transform: rotate(-90deg); }
+
+  .score-ring .score-num {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    transform: rotate(0deg);
+  }
+
+  .score-breakdown {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .score-dim {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+  }
+
+  .score-dim strong { color: var(--gold-light); font-size: 14px; display: block; }
+
+  .reviewer-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px;
+    gap: 16px;
+  }
+
+  .reviewer-spinner {
+    width: 44px; height: 44px;
+    border: 3px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .streaming-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    max-width: 340px;
+    line-height: 1.5;
+  }
+
+  .rewrite-card {
+    background: #fff;
+    border: 1.5px solid var(--border-light);
+    border-left: 4px solid var(--gold);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .rewrite-card-header {
+    padding: 12px 18px;
+    background: rgba(200,146,26,0.07);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .rewrite-card-header .label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+
+  .rewrite-card-header .original {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    text-decoration: line-through;
+    flex: 1;
+  }
+
+  .rewrite-card-body {
+    padding: 14px 18px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--navy);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="wordmark">Hoshin Kanri</div>
+      <div class="tagline">Planning Builder</div>
+    </div>
+
+    <div class="nav-section-label">Foundation</div>
+    <div class="nav-item active" onclick="goTo('welcome', this)">
+      <div class="nav-num">✦</div> Getting Started
+    </div>
+    <div class="nav-item" onclick="goTo('fundamentals', this)">
+      <div class="nav-num">1</div> Business Fundamentals
+    </div>
+    <div class="nav-item" onclick="goTo('longrange', this)">
+      <div class="nav-num">2</div> Long Range Plan
+    </div>
+
+    <div class="nav-section-label">Annual Plan</div>
+    <div class="nav-item" onclick="goTo('annual', this)">
+      <div class="nav-num">3</div> Annual Objectives
+    </div>
+    <div class="nav-item" onclick="goTo('actions', this)">
+      <div class="nav-num">4</div> Target Actions
+    </div>
+
+    <div class="nav-section-label">Review System</div>
+    <div class="nav-item" onclick="goTo('matrix', this)">
+      <div class="nav-num">5</div> Hoshin Matrix
+    </div>
+    <div class="nav-item" onclick="goTo('reviews', this)">
+      <div class="nav-num">6</div> Review Cadence
+    </div>
+    <div class="nav-item" onclick="goTo('summary', this)">
+      <div class="nav-num">↗</div> Export & Summary
+    </div>
+
+    <div class="nav-section-label">AI Tools</div>
+    <div class="nav-item" onclick="goTo('reviewer', this)">
+      <div class="nav-num" style="background:rgba(200,146,26,0.3);color:var(--gold-light)">✦</div> AI Plan Reviewer
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="progress-label">Plan Completion</div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+      </div>
+      <div class="progress-pct" id="progressPct">0% complete</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <span>Hoshin Builder</span>
+        <span class="sep">›</span>
+        <span class="current" id="topbarCurrent">Getting Started</span>
+      </div>
+      <div class="topbar-actions">
+        <div class="save-indicator" id="saveIndicator">
+          <div class="save-dot"></div>
+          <span id="saveLabel">No changes</span>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="clearAll()">↺ Reset</button>
+        <button class="btn btn-ghost btn-sm" onclick="openSheetsModal()" style="color:var(--green);border-color:rgba(22,163,74,0.35)">
+          ▦ Save to Sheets
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="goTo('summary', navFor('reviewer'))">Export Plan ↗</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE 0 — WELCOME
+    ═══════════════════════════════════════════ -->
+    <div class="page active" id="page-welcome">
+      <div class="page-header">
+        <div class="page-eyebrow">Welcome</div>
+        <div class="page-title">Build Your Hoshin Plan</div>
+        <div class="page-subtitle">A guided tool to create a complete Hoshin Kanri strategic plan — from vision through target actions and monthly reviews. Work through each section in order.</div>
+      </div>
+      <div class="page-body fade-in">
+
+        <div class="welcome-grid">
+          <div class="welcome-card">
+            <div class="step-num">1</div>
+            <h4>Define Your Foundation</h4>
+            <p>Articulate your vision, values, and the core purpose your organization exists to serve. Everything else builds from here.</p>
+          </div>
+          <div class="welcome-card">
+            <div class="step-num">2</div>
+            <h4>Set Strategic Objectives</h4>
+            <p>Develop 3–5 year breakthrough goals from SWOT analysis, then translate them into specific annual objectives across three types.</p>
+          </div>
+          <div class="welcome-card">
+            <div class="step-num">3</div>
+            <h4>Define Actions & Reviews</h4>
+            <p>Assign named Target Actions with owners and due dates, then configure your monthly review cadence to keep the plan alive.</p>
+          </div>
+        </div>
+
+        <div class="start-banner">
+          <div class="start-banner-text">
+            <h3>Ready to build your strategic plan?</h3>
+            <p>Start with Business Fundamentals — your vision, values, and the organizational context that everything else depends on.</p>
+          </div>
+          <button class="btn btn-gold" onclick="goTo('fundamentals', navFor('fundamentals'))">
+            Start Building →
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE 1 — BUSINESS FUNDAMENTALS
+    ═══════════════════════════════════════════ -->
+    <div class="page" id="page-fundamentals">
+      <div class="page-header">
+        <div class="page-eyebrow">Step 1 of 5 — Foundation</div>
+        <div class="page-title">Business Fundamentals Plan</div>
+        <div class="page-subtitle">Define the enduring purpose, values, and vision of your organization. This foundation does not change year-to-year — it is the compass for all decisions.</div>
+      </div>
+      <div class="page-body fade-in">
+
+        <div class="info-box">
+          <strong>What makes a good vision?</strong> It should be specific enough to be exclusive — ruling things out, not just inspiring. Include who you serve, what you deliver, and a time horizon. Example: <em>"Be the most trusted provider of X in Y market by 2028."</em>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="icon">🏛</div>
+            <h3>Organizational Identity</h3>
+          </div>
+          <div class="form-section-body">
+            <div class="form-grid" style="gap:20px">
+              <div class="form-group">
+                <label class="form-label">Organization Name <span class="required">*</span></label>
+                <input class="form-input" id="orgName" type="text" placeholder="e.g. Acme Manufacturing Co." oninput="updateProgress()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Fiscal Year <span class="required">*</span></label>
+                <input class="form-input" id="fiscalYear" type="text" placeholder="e.g. 2025" oninput="updateProgress()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Primary Accountable Leader</label>
+                <input class="form-input" id="leader" type="text" placeholder="Name and Title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Planning Level</label>
+                <select class="form-select" id="planLevel">
+                  <option value="">Select level…</option>
+                  <option>Corporate / Whole Organization</option>
+                  <option>Division / Business Unit</option>
+                  <option>Department / Function</option>
+                  <option>Team</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="icon">🧭</div>
+            <h3>Vision Statement</h3>
+            <span class="section-hint">Timeless — reviewed annually</span>
+          </div>
+          <div class="form-section-body">
+            <div class="form-group" style="margin-bottom:16px">
+              <label class="form-label">Vision <span class="required">*</span><span class="hint">— Where are you headed?</span></label>
+              <textarea class="form-textarea" id="vision" rows="3" placeholder="Describe the desired future state. Be specific enough to guide decisions and aspirational enough to inspire." oninput="updateProgress()"></textarea>
+            </div>
+            <div class="form-grid form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Mission <span class="hint">— Why you exist</span></label>
+                <textarea class="form-textarea" id="mission" rows="2" placeholder="The core purpose of the organization — why it exists beyond making money."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Core Values <span class="hint">— How you operate</span></label>
+                <textarea class="form-textarea" id="values" rows="2" placeholder="2–5 guiding principles that define behavior and decisions. Separate with commas or new lines."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="icon">👥</div>
+            <h3>Stakeholder Clarity</h3>
+          </div>
+          <div class="form-section-body">
+            <div class="form-grid form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Primary Customers / Stakeholders</label>
+                <textarea class="form-textarea" id="customers" rows="2" placeholder="Who are you primarily serving? What do they value most?"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Key Competitive Differentiators</label>
+                <textarea class="form-textarea" id="differentiators" rows="2" placeholder="What do you do better than anyone else? What would be lost if you disappeared?"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px">
+          <button class="btn btn-primary" onclick="goTo('longrange', navFor('longrange'))">Next: Long Range Plan →</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE 2 — LONG RANGE PLAN
+    ═══════════════════════════════════════════ -->
+    <div class="page" id="page-longrange">
+      <div class="page-header">
+        <div class="page-eyebrow">Step 2 of 5 — 3–5 Year Horizon</div>
+        <div class="page-title">Long Range Plan</div>
+        <div class="page-subtitle">Identify the breakthrough objectives that will define your organization over the next 3–5 years. Derived from honest SWOT analysis.</div>
+      </div>
+      <div class="page-body fade-in">
+
+        <div class="tab-group">
+          <div class="tab-item active" onclick="switchTab('swot', this)">SWOT Analysis</div>
+          <div class="tab-item" onclick="switchTab('lrobj', this)">Breakthrough Objectives</div>
+        </div>
+
+        <div class="tab-panel active" id="tab-swot">
+          <div class="form-grid form-grid-2" style="gap:16px">
+            <div class="form-section" style="margin-bottom:0">
+              <div class="form-section-header" style="background:#166534">
+                <div class="icon" style="background:rgba(255,255,255,0.15)">💪</div>
+                <h3>Strengths</h3>
+                <span class="section-hint">Internal — positive</span>
+              </div>
+              <div class="form-section-body">
+                <textarea class="form-textarea" id="strengths" rows="5" placeholder="What capabilities, assets, or advantages does your organization have?&#10;&#10;• Experienced leadership team&#10;• Strong customer relationships&#10;• Proprietary processes / IP"></textarea>
+              </div>
+            </div>
+            <div class="form-section" style="margin-bottom:0">
+              <div class="form-section-header" style="background:#991b1b">
+                <div class="icon" style="background:rgba(255,255,255,0.15)">⚠️</div>
+                <h3>Weaknesses</h3>
+                <span class="section-hint">Internal — negative</span>
+              </div>
+              <div class="form-section-body">
+                <textarea class="form-textarea" id="weaknesses" rows="5" placeholder="What gaps, limitations, or vulnerabilities exist internally?&#10;&#10;• Outdated systems / infrastructure&#10;• High employee turnover&#10;• Limited geographic presence"></textarea>
+              </div>
+            </div>
+            <div class="form-section" style="margin-bottom:0">
+              <div class="form-section-header" style="background:#1B4F8A">
+                <div class="icon" style="background:rgba(255,255,255,0.15)">🚀</div>
+                <h3>Opportunities</h3>
+                <span class="section-hint">External — positive</span>
+              </div>
+              <div class="form-section-body">
+                <textarea class="form-textarea" id="opportunities" rows="5" placeholder="What external conditions could you exploit to your advantage?&#10;&#10;• Underserved market segment&#10;• Competitor weakness&#10;• Emerging technology or regulation"></textarea>
+              </div>
+            </div>
+            <div class="form-section" style="margin-bottom:0">
+              <div class="form-section-header" style="background:#C8921A">
+                <div class="icon" style="background:rgba(255,255,255,0.15)">⚡</div>
+                <h3>Threats</h3>
+                <span class="section-hint">External — negative</span>
+              </div>
+              <div class="form-section-body">
+                <textarea class="form-textarea" id="threats" rows="5" placeholder="What external forces could harm performance or relevance?&#10;&#10;• New competitive entrants&#10;• Regulatory changes&#10;• Supply chain / economic risk"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-lrobj">
+          <div class="info-box">
+            <strong>Format:</strong> Each breakthrough objective should follow the SMART structure — <em>Verb + Metric + From X + To Y + By Date.</em> Example: <em>"Grow gross margin from 28% to 35% by December 31, 2027."</em> Limit to 3–5 objectives.
+          </div>
+
+          <div id="lrObjList"></div>
+          <button class="add-row" onclick="addLRObj()">
+            <span style="font-size:18px;line-height:1">+</span> Add Long-Range Objective
+          </button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:24px">
+          <button class="btn btn-ghost" onclick="goTo('fundamentals', navFor('fundamentals'))">← Back</button>
+          <button class="btn btn-primary" onclick="goTo('annual', navFor('annual'))">Next: Annual Objectives →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE 3 — ANNUAL OBJECTIVES
+    ═══════════════════════════════════════════ -->
+    <div class="page" id="page-annual">
+      <div class="page-header">
+        <div class="page-eyebrow">Step 3 of 5 — This Year</div>
+        <div class="page-title">Annual Objectives</div>
+        <div class="page-subtitle">Define your specific, measurable objectives for this planning year across three types. Each objective needs a SMART goal and a measurement category.</div>
+      </div>
+      <div class="page-body fade-in">
+
+        <div class="info-box" style="margin-bottom:16px">
+          <strong>Three types:</strong>
+          <span class="badge badge-navy" style="margin:0 4px">Fundamentals</span> Core metrics maintained year after year ·
+          <span class="badge badge-gold" style="margin:0 4px">Annual</span> Improvement goals for this cycle ·
+          <span class="badge badge-green" style="margin:0 4px">Development</span> Capability investments enabling future performance
+        </div>
+
+        <div id="objectivesList"></div>
+
+        <button class="add-row" onclick="addObjective()">
+          <span style="font-size:18px;line-height:1">+</span> Add Annual Objective
+        </button>
+
+        <div style="display:flex; justify-content:space-between; margin-top:24px">
+          <button class="btn btn-ghost" onclick="goTo('longrange', navFor('longrange'))">← Back</button>
+          <button class="btn btn-primary" onclick="goTo('actions', navFor('actions'))">Next: Target Actions →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE 4 — TARGET ACTIONS
+    ═══════════════════════════════════════════ -->
+    <div class="page" id="page-actions">
+      <div class="page-header">
+        <div class="page-eyebrow">Step 4 of 5 — Execution</div>
+        <div class="page-title">Target Actions</div>
+        <div class="page-subtitle">Define the specific actions that will drive achievement of your annual objectives. Each action needs a WHAT, a WHO (one named person), and a WHEN.</div>
+      </div>
+      <div class="page-body fade-in">
+
+        <div class="info-box">
+          <strong>Rule:</strong> Every Target Action must have one named accountable person — not a team. If two people share ownership, split it into two actions. Actions are tracked monthly for % completion and timeline status.
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="icon">⚡</div>
+            <h3>Target Actions A – I</h3>
+            <span class="section-hint">Up to 9 actions per planning level</span>
+          </div>
+          <div class="form-section-body" style="padding:16px 20px">
+
+            <div style="display:grid; grid-template-columns:36px 1fr 140px 140px 120px 32px; gap:8px; padding:0 0 8px; border-bottom:2px solid var(--navy);">
+              <div></div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--navy)">What (Specific Deliverable)</div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--navy)">Who (Owner)</div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--navy)">Due Date</div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--navy)">% Complete</div>
+              <div></div>
+            </div>
+
+            <div id="actionsList"></div>
+
+            <button class="add-row" style="margin-top:12px" onclick="addAction()">
+              <span style="font-size:18px;line-height:1">+</span> Add Target Action
+            </button>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:8px">
+          <button class="btn btn-ghost" onclick="goTo('annual', navFor('annual'))">← Back</button>
+          <button class="btn btn-primary" onclick="goTo('matrix', navFor('matrix'))">Next: Hoshin Matrix →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE 5 — HOSHIN MATRIX
+    ═══════════════════════════════════════════ -->
+    <div class="page" id="page-matrix">
+      <div class="page-header">
+        <div class="page-eyebrow">Step 5 of 5 — Alignment View</div>
+        <div class="page-title">Hoshin Matrix</div>
+        <div class="page-subtitle">Map which Target Actions support which Annual Objectives. Click cells to mark alignment (X). Every action should support at least one objective.</div>
+      </div>
+      <div class="page-body fade-in">
+        <div class="info-box">
+          <strong>How to use:</strong> Rows = your Annual Objectives. Columns = Target Actions A–I. Click a cell to toggle the alignment mark. An action with no X marks may not belong on the plan.
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="icon">🔲</div>
+            <h3>Alignment Matrix</h3>
+            <span class="section-hint">Click cells to mark which actions support which objectives</span>
+          </div>
+          <div class="form-section-body" style="padding:0">
+            <div class="matrix-container" style="padding:16px">
+              <div id="matrixContent">
+                <p style="color:var(--text-muted);font-size:13px;padding:20px">Add Annual Objectives and Target Actions first to populate the matrix.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:8px">
+          <button class="btn btn-ghost" onclick="goTo('actions', navFor('actions'))">← Back</button>
+          <button class="btn btn-primary" onclick="goTo('reviews', navFor('reviews'))">Next: Review Cadence →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE 6 — REVIEWS
+    ═══════════════════════════════════════════ -->
+    <div class="page" id="page-reviews">
+      <div class="page-header">
+        <div class="page-eyebrow">Review System</div>
+        <div class="page-title">Review Cadence</div>
+        <div class="page-subtitle">Schedule and configure your operating rhythm. "You get what you check." The review cadence is what separates a living plan from a binder on a shelf.</div>
+      </div>
+      <div class="page-body fade-in">
+
+        <div class="review-grid">
+
+          <div class="review-card">
+            <div class="review-card-header monthly">
+              <div>
+                <div class="label">Monthly Review</div>
+                <div class="freq">Team Level · Every Month</div>
+              </div>
+            </div>
+            <div class="review-card-body">
+              <div class="form-group" style="margin-bottom:14px">
+                <label class="form-label">Scheduled Day</label>
+                <input class="form-input" id="monthlyDay" type="text" placeholder="e.g. First Tuesday of each month">
+              </div>
+              <div class="form-group" style="margin-bottom:14px">
+                <label class="form-label">Meeting Owner</label>
+                <input class="form-input" id="monthlyOwner" type="text" placeholder="Name">
+              </div>
+              <div class="review-checklist">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);margin-bottom:4px">Agenda Checklist</div>
+                <div class="review-check"><input type="checkbox" id="mc1"><label for="mc1">Enter Actual results in Summary sheets</label></div>
+                <div class="review-check"><input type="checkbox" id="mc2"><label for="mc2">Review auto-calculated variances</label></div>
+                <div class="review-check"><input type="checkbox" id="mc3"><label for="mc3">Update Target Action % complete</label></div>
+                <div class="review-check"><input type="checkbox" id="mc4"><label for="mc4">Enter countermeasures for red variances</label></div>
+                <div class="review-check"><input type="checkbox" id="mc5"><label for="mc5">Flag issues requiring escalation</label></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card-header quarterly">
+              <div>
+                <div class="label">Quarterly Review</div>
+                <div class="freq">Function Level · Every Quarter</div>
+              </div>
+            </div>
+            <div class="review-card-body">
+              <div class="form-group" style="margin-bottom:14px">
+                <label class="form-label">Scheduled Week</label>
+                <input class="form-input" id="quarterlyWeek" type="text" placeholder="e.g. Week 1 of January, April, July, Oct">
+              </div>
+              <div class="form-group" style="margin-bottom:14px">
+                <label class="form-label">Meeting Owner</label>
+                <input class="form-input" id="quarterlyOwner" type="text" placeholder="Name">
+              </div>
+              <div class="review-checklist">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);margin-bottom:4px">Agenda Checklist</div>
+                <div class="review-check"><input type="checkbox" id="qc1"><label for="qc1">Full Hoshin review — all objectives</label></div>
+                <div class="review-check"><input type="checkbox" id="qc2"><label for="qc2">Assess annual goal achievability</label></div>
+                <div class="review-check"><input type="checkbox" id="qc3"><label for="qc3">Reprioritize target actions as needed</label></div>
+                <div class="review-check"><input type="checkbox" id="qc4"><label for="qc4">Escalate systemic issues upward</label></div>
+                <div class="review-check"><input type="checkbox" id="qc5"><label for="qc5">Review radar chart YTD trends</label></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card-header annual">
+              <div>
+                <div class="label">Annual Review</div>
+                <div class="freq">Corporate Level · Year End</div>
+              </div>
+            </div>
+            <div class="review-card-body">
+              <div class="form-group" style="margin-bottom:14px">
+                <label class="form-label">Scheduled Date</label>
+                <input class="form-input" id="annualDate" type="text" placeholder="e.g. December 15–16">
+              </div>
+              <div class="form-group" style="margin-bottom:14px">
+                <label class="form-label">Meeting Owner</label>
+                <input class="form-input" id="annualOwner" type="text" placeholder="Name">
+              </div>
+              <div class="review-checklist">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);margin-bottom:4px">Agenda Checklist</div>
+                <div class="review-check"><input type="checkbox" id="ac1"><label for="ac1">Year-end performance vs. plan</label></div>
+                <div class="review-check"><input type="checkbox" id="ac2"><label for="ac2">Radar chart — all 24 measures</label></div>
+                <div class="review-check"><input type="checkbox" id="ac3"><label for="ac3">Document lessons learned</label></div>
+                <div class="review-check"><input type="checkbox" id="ac4"><label for="ac4">Identify objectives rolling forward</label></div>
+                <div class="review-check"><input type="checkbox" id="ac5"><label for="ac5">Launch next planning cycle</label></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form-section" style="margin-top:24px">
+          <div class="form-section-header">
+            <div class="icon">📝</div>
+            <h3>Countermeasure Protocol</h3>
+          </div>
+          <div class="form-section-body">
+            <div class="form-grid form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Variance Threshold for Escalation</label>
+                <input class="form-input" id="threshold" type="text" placeholder="e.g. More than 10% below plan for 2 consecutive months">
+                <div class="form-hint">At what variance level does a measure require a formal countermeasure entry?</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Countermeasure Owner Assignment</label>
+                <select class="form-select" id="countermeasureOwner">
+                  <option value="">Select rule…</option>
+                  <option>Same as objective accountable party</option>
+                  <option>Escalated to function leader</option>
+                  <option>Cross-functional team convened</option>
+                  <option>Determined case-by-case</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:8px">
+          <button class="btn btn-ghost" onclick="goTo('matrix', navFor('matrix'))">← Back</button>
+          <button class="btn btn-primary" onclick="goTo('summary', navFor('summary'))">View Summary & Export →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE 7 — SUMMARY / EXPORT
+    ═══════════════════════════════════════════ -->
+    <div class="page" id="page-summary">
+      <div class="page-header">
+        <div class="page-eyebrow">Plan Summary</div>
+        <div class="page-title">Your Hoshin Plan</div>
+        <div class="page-subtitle">Review your complete plan before exporting. Every section is summarized below.</div>
+      </div>
+      <div class="page-body fade-in">
+
+        <div class="summary-hero" id="summaryHero">
+          <h2 id="summaryOrgName">Your Organization</h2>
+          <p id="summaryVisionPreview">Complete the Business Fundamentals section to see your vision here.</p>
+          <div class="summary-stats">
+            <div class="stat-card">
+              <div class="stat-num" id="statLRObj">0</div>
+              <div class="stat-label">Long-Range Objectives</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num" id="statAnnObj">0</div>
+              <div class="stat-label">Annual Objectives</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num" id="statActions">0</div>
+              <div class="stat-label">Target Actions</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num" id="statYear">—</div>
+              <div class="stat-label">Planning Year</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="export-options">
+          <div class="export-card" onclick="exportJSON()">
+            <div class="export-icon">📄</div>
+            <div class="export-title">Export as JSON</div>
+            <div class="export-desc">Raw plan data — import into other tools or your workbook setup</div>
+          </div>
+          <div class="export-card" onclick="exportText()">
+            <div class="export-icon">📋</div>
+            <div class="export-title">Copy Plan Summary</div>
+            <div class="export-desc">Formatted text summary — paste into Word, email, or any document</div>
+          </div>
+          <div class="export-card" onclick="window.print()">
+            <div class="export-icon">🖨</div>
+            <div class="export-title">Print / Save as PDF</div>
+            <div class="export-desc">Print-ready plan layout for sharing or filing</div>
+          </div>
+        </div>
+
+        <div id="summaryContent"></div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE 8 — AI PLAN REVIEWER
+    ═══════════════════════════════════════════ -->
+    <div class="page" id="page-reviewer">
+      <div class="page-header">
+        <div class="page-eyebrow">AI Tools</div>
+        <div class="page-title">AI Plan Reviewer</div>
+        <div class="page-subtitle">Get expert feedback on your plan before you commit to it. The AI reviews every section — goals, owners, measurement, alignment — and flags issues a consultant would catch.</div>
+      </div>
+      <div class="page-body fade-in">
+
+        <!-- API KEY INPUT -->
+        <div class="form-section" id="apiKeySection">
+          <div class="form-section-header">
+            <div class="icon">🔑</div>
+            <h3>Anthropic API Key</h3>
+            <span class="section-hint">Stored in your browser only — never sent anywhere except Anthropic</span>
+          </div>
+          <div class="form-section-body">
+            <div style="display:flex;gap:10px;align-items:flex-end">
+              <div class="form-group" style="flex:1">
+                <label class="form-label">API Key <span class="required">*</span><span class="hint"> — Get yours at console.anthropic.com</span></label>
+                <input class="form-input" id="apiKey" type="password" placeholder="sk-ant-…" autocomplete="off">
+              </div>
+              <button class="btn btn-ghost" onclick="toggleKeyVisibility()" style="margin-bottom:1px;flex-shrink:0" id="keyToggle">Show</button>
+              <button class="btn btn-primary" onclick="saveApiKey()" style="margin-bottom:1px;flex-shrink:0">Save Key</button>
+            </div>
+            <div class="form-hint" style="margin-top:8px">Your key is saved to localStorage and used only for direct calls to api.anthropic.com. It is never stored on any server.</div>
+            <div id="keyStatus" style="margin-top:10px;display:none"></div>
+          </div>
+        </div>
+
+        <!-- REVIEW SCOPE -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="icon">🎯</div>
+            <h3>Review Scope</h3>
+            <span class="section-hint">Choose what the AI focuses on</span>
+          </div>
+          <div class="form-section-body">
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px" id="reviewScopes">
+              <label class="scope-chip active"><input type="checkbox" checked value="smart"> SMART Goals</label>
+              <label class="scope-chip active"><input type="checkbox" checked value="ownership"> Ownership & Accountability</label>
+              <label class="scope-chip active"><input type="checkbox" checked value="alignment"> Action–Objective Alignment</label>
+              <label class="scope-chip active"><input type="checkbox" checked value="balance"> Plan Balance & Focus</label>
+              <label class="scope-chip active"><input type="checkbox" checked value="measurement"> Measurement Categories</label>
+              <label class="scope-chip active"><input type="checkbox" checked value="swot"> SWOT–Objective Connection</label>
+            </div>
+
+            <div style="display:flex;gap:10px;align-items:center">
+              <button class="btn btn-gold" id="reviewBtn" onclick="runReview()" style="font-size:14px;padding:11px 28px">
+                ✦ Review My Plan
+              </button>
+              <span style="font-size:12px;color:var(--text-muted)" id="reviewStatus"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="reviewResults" style="display:none">
+
+          <!-- SCORE CARD -->
+          <div id="scoreCard" style="margin-bottom:20px"></div>
+
+          <!-- FINDINGS -->
+          <div id="findingsContainer"></div>
+
+          <!-- REWRITE SUGGESTIONS -->
+          <div id="rewriteContainer"></div>
+
+          <!-- OVERALL SUMMARY -->
+          <div id="overallSummary"></div>
+
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="reviewEmpty" style="text-align:center;padding:60px 20px">
+          <div style="font-size:48px;margin-bottom:16px">✦</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:8px">Ready to review your plan</div>
+          <div style="font-size:13.5px;color:var(--text-muted);max-width:420px;margin:0 auto;line-height:1.6">Add your API key above, fill in at least your objectives and target actions, then click <strong>Review My Plan</strong> to get consultant-quality feedback in seconds.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═════════════════════════════════════════════
+     GOOGLE SHEETS MODAL
+═════════════════════════════════════════════ -->
+<div class="modal-overlay" id="sheetsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>▦ Save to Google Sheets</h3>
+      <button class="modal-close" onclick="closeSheetsModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div style="background:rgba(22,163,74,0.07);border:1px solid rgba(22,163,74,0.2);border-radius:8px;padding:14px 16px;margin-bottom:22px;font-size:13px;color:var(--green);line-height:1.5">
+        Your plan will be exported as a CSV and written to Google Sheets using a one-time Google Apps Script. No API key or login required in the browser — the script runs inside your own Google account.
+      </div>
+
+      <div class="modal-step">
+        <div class="modal-step-num">1</div>
+        <div class="modal-step-content">
+          <h4>Download your plan as CSV</h4>
+          <p>Click below to download a structured CSV of your full Hoshin Plan — all sections, ready to paste or import.</p>
+          <button class="btn btn-primary" style="margin-top:10px;font-size:13px" onclick="downloadCSV()">
+            ↓ Download Plan CSV
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-step">
+        <div class="modal-step-num">2</div>
+        <div class="modal-step-content">
+          <h4>Create a new Google Sheet</h4>
+          <p>Open <strong>sheets.google.com</strong>, create a blank sheet, then go to <strong>Extensions → Apps Script</strong>.</p>
+        </div>
+      </div>
+
+      <div class="modal-step">
+        <div class="modal-step-num">3</div>
+        <div class="modal-step-content">
+          <h4>Paste this Apps Script and run it</h4>
+          <p>Delete the default code in the editor, paste the script below, then click <strong>Run → importHoshinPlan</strong>. It will prompt you to authorize — approve it once.</p>
+          <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="copyAppsScript()">Copy Apps Script</button>
+          <code id="appsScriptPreview" style="max-height:120px;overflow-y:auto;margin-top:8px">Loading…</code>
+        </div>
+      </div>
+
+      <div class="modal-step">
+        <div class="modal-step-num">4</div>
+        <div class="modal-step-content">
+          <h4>Your plan appears in the Sheet</h4>
+          <p>The script imports all sections — Fundamentals, SWOT, Long-Range Objectives, Annual Objectives, Target Actions, and Review Cadence — each on its own tab, with formatting.</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeSheetsModal()">Close</button>
+      <button class="btn btn-primary" onclick="downloadCSV(); closeSheetsModal()">Download CSV & Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ═════════════════════════════════════════════════════════
+     JAVASCRIPT
+═════════════════════════════════════════════════════════ -->
+<script>
+
+// ── STATE ──
+let state = {
+  lrObjectives: [],
+  objectives: [],
+  actions: [],
+  alignmentMatrix: {},
+};
+
+const ACTION_LETTERS = ['A','B','C','D','E','F','G','H','I'];
+
+// ── NAVIGATION ──
+function navFor(pageId) {
+  return document.querySelector(`.nav-item[onclick*="'${pageId}'"]`);
+}
+
+function goTo(pageId, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const page = document.getElementById('page-' + pageId);
+  if (page) page.classList.add('active');
+  const nav = navEl || navFor(pageId);
+  if (nav) nav.classList.add('active');
+  const nameEl = nav && nav.querySelector('div:last-child');
+  document.getElementById('topbarCurrent').textContent = nameEl ? nameEl.textContent.trim() : '';
+  window.scrollTo(0,0);
+
+  if (pageId === 'matrix') buildMatrix();
+  if (pageId === 'summary') buildSummary();
+  updateProgress();
+}
+
+// ── TABS ──
+function switchTab(tabId, el) {
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + tabId).classList.add('active');
+}
+
+// ── PROGRESS ──
+function updateProgress() {
+  let score = 0;
+  if (v('orgName')) score += 10;
+  if (v('vision')) score += 15;
+  if (state.lrObjectives.length > 0) score += 15;
+  if (state.objectives.length > 0) score += 20;
+  if (state.actions.length > 0) score += 20;
+  const hasSWOT = v('strengths') || v('weaknesses') || v('opportunities') || v('threats');
+  if (hasSWOT) score += 10;
+  if (v('monthlyDay') || v('quarterlyWeek')) score += 10;
+  score = Math.min(100, score);
+  document.getElementById('progressBar').style.width = score + '%';
+  document.getElementById('progressPct').textContent = score + '% complete';
+}
+
+function v(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+// ── LONG-RANGE OBJECTIVES ──
+function addLRObj() {
+  const id = Date.now();
+  state.lrObjectives.push({ id, text: '', swotLink: '' });
+  renderLRObjs();
+  saveToLocalStorage();
+}
+
+function removeLRObj(id) {
+  state.lrObjectives = state.lrObjectives.filter(o => o.id !== id);
+  renderLRObjs();
+  updateProgress();
+  saveToLocalStorage();
+}
+
+function renderLRObjs() {
+  const container = document.getElementById('lrObjList');
+  if (state.lrObjectives.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = state.lrObjectives.map((obj, i) => `
+    <div class="objective-card" style="border-left:4px solid var(--navy)">
+      <div class="objective-card-header">
+        <div class="obj-num">${i+1}</div>
+        <span style="font-size:12px;font-weight:600;color:var(--slate)">Long-Range Objective</span>
+        <button class="obj-remove" onclick="removeLRObj(${obj.id})">✕</button>
+      </div>
+      <div class="objective-card-body">
+        <div class="form-group" style="margin-bottom:12px">
+          <label class="form-label">SMART Goal Statement <span class="required">*</span></label>
+          <input class="form-input" type="text" value="${obj.text}" placeholder="Verb + Metric + From X + To Y + By Date. e.g. Grow gross margin from 28% to 35% by Dec 2027"
+            oninput="state.lrObjectives[${i}].text=this.value; updateProgress()">
+        </div>
+        <div class="form-grid form-grid-2">
+          <div class="form-group">
+            <label class="form-label">SWOT Driver</label>
+            <select class="form-select" onchange="state.lrObjectives[${i}].swotLink=this.value">
+              <option value="">Select primary driver…</option>
+              <option ${obj.swotLink==='S'?'selected':''} value="S">Strength to leverage</option>
+              <option ${obj.swotLink==='W'?'selected':''} value="W">Weakness to address</option>
+              <option ${obj.swotLink==='O'?'selected':''} value="O">Opportunity to capture</option>
+              <option ${obj.swotLink==='T'?'selected':''} value="T">Threat to mitigate</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Time Horizon</label>
+            <input class="form-input" type="text" value="${obj.horizon||''}" placeholder="e.g. 3 years (2025–2028)"
+              oninput="state.lrObjectives[${i}].horizon=this.value">
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── ANNUAL OBJECTIVES ──
+function addObjective() {
+  const id = Date.now();
+  state.objectives.push({
+    id, type: 'fundamentals', metric: '', from: '', to: '', deadline: '',
+    owner: '', category: '1', description: ''
+  });
+  renderObjectives();
+  saveToLocalStorage();
+}
+
+function removeObjective(id) {
+  state.objectives = state.objectives.filter(o => o.id !== id);
+  renderObjectives();
+  updateProgress();
+  saveToLocalStorage();
+}
+
+function renderObjectives() {
+  const container = document.getElementById('objectivesList');
+  if (state.objectives.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = state.objectives.map((obj, i) => {
+    const typeBadge = obj.type === 'annual' ? 'annual' : obj.type === 'development' ? 'development' : '';
+    const typeLabel = obj.type === 'fundamentals' ? 'Business Fundamental' : obj.type === 'annual' ? 'Annual Objective' : 'Development Objective';
+    return `
+    <div class="objective-card">
+      <div class="objective-card-header">
+        <div class="obj-num">${i+1}</div>
+        <select style="border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--navy);cursor:pointer;outline:none;"
+          onchange="state.objectives[${i}].type=this.value; renderObjectives()">
+          <option value="fundamentals" ${obj.type==='fundamentals'?'selected':''}>Business Fundamental</option>
+          <option value="annual" ${obj.type==='annual'?'selected':''}>Annual Objective</option>
+          <option value="development" ${obj.type==='development'?'selected':''}>Development Objective</option>
+        </select>
+        <button class="obj-remove" onclick="removeObjective(${obj.id})">✕</button>
+      </div>
+      <div class="objective-card-body">
+        <div class="form-group" style="margin-bottom:14px">
+          <label class="form-label">Metric / What Changes <span class="required">*</span></label>
+          <input class="form-input" type="text" value="${obj.metric}" placeholder="e.g. Overtime % to Sales, Gross Margin %, On-Time Delivery %"
+            oninput="state.objectives[${i}].metric=this.value; updateProgress()">
+        </div>
+        <div class="form-grid form-grid-3">
+          <div class="form-group">
+            <label class="form-label">Baseline (From)</label>
+            <input class="form-input" type="text" value="${obj.from}" placeholder="e.g. 10%" oninput="state.objectives[${i}].from=this.value">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target (To)</label>
+            <input class="form-input" type="text" value="${obj.to}" placeholder="e.g. 8%" oninput="state.objectives[${i}].to=this.value">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Deadline</label>
+            <input class="form-input" type="text" value="${obj.deadline}" placeholder="e.g. Dec 31, 2025" oninput="state.objectives[${i}].deadline=this.value">
+          </div>
+        </div>
+        <div class="form-grid form-grid-2" style="margin-top:12px">
+          <div class="form-group">
+            <label class="form-label">Accountable Owner <span class="required">*</span></label>
+            <input class="form-input" type="text" value="${obj.owner}" placeholder="One named person — not a team" oninput="state.objectives[${i}].owner=this.value">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Measurement Category</label>
+            <select class="form-select" onchange="state.objectives[${i}].category=this.value">
+              <option value="1" ${obj.category==='1'?'selected':''}>Cat 1 — % Lower is Better (defect rate, overtime %)</option>
+              <option value="2" ${obj.category==='2'?'selected':''}>Cat 2 — % Higher is Better (OTD, yield %)</option>
+              <option value="3" ${obj.category==='3'?'selected':''}>Cat 3 — $ Lower is Better (cost, warranty $)</option>
+              <option value="4" ${obj.category==='4'?'selected':''}>Cat 4 — $ Higher is Better (revenue, margin $)</option>
+              <option value="5" ${obj.category==='5'?'selected':''}>Cat 5 — Units Lower is Better (errors, incidents)</option>
+              <option value="6" ${obj.category==='6'?'selected':''}>Cat 6 — Units Higher is Better (output, NPS score)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  `}).join('');
+}
+
+// ── TARGET ACTIONS ──
+function addAction() {
+  if (state.actions.length >= 9) return;
+  const id = Date.now();
+  state.actions.push({ id, what: '', who: '', when: '', pct: '0' });
+  renderActions();
+  saveToLocalStorage();
+}
+
+function removeAction(id) {
+  state.actions = state.actions.filter(a => a.id !== id);
+  renderActions();
+  updateProgress();
+  saveToLocalStorage();
+}
+
+function renderActions() {
+  const container = document.getElementById('actionsList');
+  container.innerHTML = state.actions.map((action, i) => `
+    <div class="action-row fade-in">
+      <div class="action-letter">${ACTION_LETTERS[i]}</div>
+      <input class="form-input" type="text" value="${action.what}" placeholder="Specific, concrete deliverable or outcome"
+        oninput="state.actions[${i}].what=this.value; updateProgress()" style="font-size:13px">
+      <input class="form-input action-who" type="text" value="${action.who}" placeholder="Owner name"
+        oninput="state.actions[${i}].who=this.value" style="font-size:13px">
+      <input class="form-input action-when" type="text" value="${action.when}" placeholder="Due date"
+        oninput="state.actions[${i}].when=this.value" style="font-size:13px">
+      <div style="display:flex;align-items:center;gap:6px">
+        <input type="range" min="0" max="100" step="5" value="${action.pct}"
+          style="flex:1;accent-color:var(--cobalt)"
+          oninput="state.actions[${i}].pct=this.value; this.nextElementSibling.textContent=this.value+'%'">
+        <span style="font-size:11px;font-family:'DM Mono',monospace;color:var(--slate);width:32px">${action.pct}%</span>
+      </div>
+      <button class="action-remove" onclick="removeAction(${action.id})">✕</button>
+    </div>
+  `).join('');
+}
+
+// ── MATRIX ──
+function buildMatrix() {
+  const container = document.getElementById('matrixContent');
+  const objs = state.objectives;
+  const acts = state.actions;
+
+  if (objs.length === 0 && acts.length === 0) {
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:20px">Add Annual Objectives and Target Actions first to populate the matrix.</p>';
+    return;
+  }
+
+  const catClass = (c) => `cat-${c}`;
+  const catLabel = (c) => {
+    const labels = {1:'%↓',2:'%↑','3':'$↓','4':'$↑','5':'#↓','6':'#↑'};
+    return labels[c] || c;
+  };
+
+  let html = `<table class="matrix-table">
+    <thead>
+      <tr>
+        <th style="width:200px">Objective</th>
+        <th>Owner</th>
+        <th>From → To</th>
+        <th>Deadline</th>
+        <th class="gold" style="text-align:center">Cat</th>
+        ${acts.map((a,i) => `<th class="gold" style="text-align:center;min-width:38px">Action ${ACTION_LETTERS[i]}</th>`).join('')}
+      </tr>
+    </thead>
+    <tbody>`;
+
+  objs.forEach((obj, oi) => {
+    html += `<tr>
+      <td style="font-weight:500;max-width:200px;word-break:break-word">${obj.metric || `Objective ${oi+1}`}</td>
+      <td style="font-size:12px;color:var(--text-muted)">${obj.owner || '—'}</td>
+      <td style="font-size:12px;font-family:'DM Mono',monospace">${obj.from||'?'} → ${obj.to||'?'}</td>
+      <td style="font-size:12px">${obj.deadline||'—'}</td>
+      <td style="text-align:center"><span class="measure-cat ${catClass(obj.category)}">${catLabel(obj.category)}</span></td>
+      ${acts.map((a,ai) => {
+        const key = `${oi}-${ai}`;
+        const marked = state.alignmentMatrix[key];
+        return `<td style="text-align:center;padding:8px">
+          <div class="x-mark ${marked?'':'empty'}" onclick="toggleMatrix(${oi},${ai})" title="Toggle alignment">
+            ${marked ? '✕' : ''}
+          </div>
+        </td>`;
+      }).join('')}
+    </tr>`;
+  });
+
+  if (objs.length === 0) {
+    html += `<tr><td colspan="${5+acts.length}" style="text-align:center;color:var(--text-muted);font-size:13px;padding:20px">No objectives added yet.</td></tr>`;
+  }
+
+  html += `</tbody></table>`;
+
+  if (acts.length > 0) {
+    html += `<div style="margin-top:16px;padding:14px 16px;background:var(--mist);border-radius:var(--radius-sm)">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);margin-bottom:8px">Action Legend</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        ${acts.map((a,i) => `
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px">
+            <div class="action-letter" style="width:22px;height:22px;font-size:10px">${ACTION_LETTERS[i]}</div>
+            <span style="color:var(--text)">${a.what || `Action ${ACTION_LETTERS[i]}`}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function toggleMatrix(oi, ai) {
+  const key = `${oi}-${ai}`;
+  state.alignmentMatrix[key] = !state.alignmentMatrix[key];
+  buildMatrix();
+  saveToLocalStorage();
+}
+
+// ── SUMMARY ──
+function buildSummary() {
+  const orgName = v('orgName') || 'Your Organization';
+  const year = v('fiscalYear') || '—';
+  const vision = v('vision') || 'Vision not yet defined.';
+
+  document.getElementById('summaryOrgName').textContent = `${orgName} — FY${year} Hoshin Plan`;
+  document.getElementById('summaryVisionPreview').textContent = vision.length > 150 ? vision.substring(0,150) + '…' : vision;
+  document.getElementById('statLRObj').textContent = state.lrObjectives.length;
+  document.getElementById('statAnnObj').textContent = state.objectives.length;
+  document.getElementById('statActions').textContent = state.actions.length;
+  document.getElementById('statYear').textContent = year;
+
+  let html = '';
+
+  // Fundamentals
+  if (v('orgName') || v('vision') || v('mission')) {
+    html += `<div class="form-section">
+      <div class="form-section-header"><div class="icon">🏛</div><h3>Business Fundamentals</h3></div>
+      <div class="form-section-body">
+        ${v('vision') ? `<div style="margin-bottom:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--gold);margin-bottom:4px">Vision</div><p style="font-size:14px;color:var(--navy);font-style:italic">"${v('vision')}"</p></div>` : ''}
+        ${v('mission') ? `<div style="margin-bottom:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--slate);margin-bottom:4px">Mission</div><p style="font-size:13.5px">${v('mission')}</p></div>` : ''}
+        ${v('values') ? `<div><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--slate);margin-bottom:4px">Values</div><p style="font-size:13.5px">${v('values')}</p></div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // Long Range
+  if (state.lrObjectives.length > 0) {
+    html += `<div class="form-section">
+      <div class="form-section-header"><div class="icon">🎯</div><h3>Long-Range Breakthrough Objectives</h3></div>
+      <div class="form-section-body">
+        ${state.lrObjectives.map((o,i) => `
+          <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border-light)">
+            <div style="width:24px;height:24px;background:var(--navy);color:var(--gold-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${i+1}</div>
+            <div>
+              <div style="font-size:14px;font-weight:500;color:var(--navy)">${o.text || 'Objective not defined'}</div>
+              ${o.horizon ? `<div style="font-size:12px;color:var(--text-muted);margin-top:2px">⏱ ${o.horizon}</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Annual Objectives
+  if (state.objectives.length > 0) {
+    const catColors = ['cat-1','cat-2','cat-3','cat-4','cat-5','cat-6'];
+    const catNames = ['% Lower Better','% Higher Better','$ Lower Better','$ Higher Better','Units Lower Better','Units Higher Better'];
+    html += `<div class="form-section">
+      <div class="form-section-header"><div class="icon">📊</div><h3>Annual Objectives</h3></div>
+      <div class="form-section-body" style="padding:0">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr style="background:var(--mist)">
+              <th style="padding:10px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">#</th>
+              <th style="padding:10px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">Metric</th>
+              <th style="padding:10px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">Type</th>
+              <th style="padding:10px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">Goal</th>
+              <th style="padding:10px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">Owner</th>
+              <th style="padding:10px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">Cat</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.objectives.map((o,i) => `
+              <tr style="${i%2===0?'background:var(--off-white)':''}">
+                <td style="padding:10px 16px;font-weight:700;color:var(--cobalt)">${i+1}</td>
+                <td style="padding:10px 16px;font-weight:500">${o.metric||'—'}</td>
+                <td style="padding:10px 16px"><span class="badge badge-${o.type==='annual'?'gold':o.type==='development'?'green':'navy'}" style="font-size:10px">${o.type}</span></td>
+                <td style="padding:10px 16px;font-family:'DM Mono',monospace;font-size:12px">${o.from||'?'} → ${o.to||'?'} · ${o.deadline||'—'}</td>
+                <td style="padding:10px 16px;color:var(--text-muted)">${o.owner||'—'}</td>
+                <td style="padding:10px 16px"><span class="measure-cat ${catColors[o.category-1]}">${catNames[o.category-1]}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  }
+
+  // Target Actions
+  if (state.actions.length > 0) {
+    html += `<div class="form-section">
+      <div class="form-section-header"><div class="icon">⚡</div><h3>Target Actions</h3></div>
+      <div class="form-section-body" style="padding:0">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr style="background:var(--mist)">
+              <th style="padding:10px 16px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">Act</th>
+              <th style="padding:10px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">What</th>
+              <th style="padding:10px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">Who</th>
+              <th style="padding:10px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">When</th>
+              <th style="padding:10px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">% Done</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.actions.map((a,i) => `
+              <tr style="${i%2===0?'background:var(--off-white)':''}">
+                <td style="padding:10px 16px;text-align:center">
+                  <div class="action-letter" style="width:24px;height:24px;font-size:11px;margin:auto">${ACTION_LETTERS[i]}</div>
+                </td>
+                <td style="padding:10px 16px;font-weight:500">${a.what||'—'}</td>
+                <td style="padding:10px 16px;color:var(--text-muted)">${a.who||'—'}</td>
+                <td style="padding:10px 16px;color:var(--text-muted)">${a.when||'—'}</td>
+                <td style="padding:10px 16px">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <div style="width:80px;height:6px;background:var(--border);border-radius:99px;overflow:hidden">
+                      <div style="height:100%;width:${a.pct}%;background:${a.pct>75?'var(--green-light)':a.pct>40?'var(--cobalt)':'var(--gold)'};transition:width .3s"></div>
+                    </div>
+                    <span style="font-size:12px;font-family:'DM Mono',monospace;color:var(--slate)">${a.pct}%</span>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  }
+
+  if (!html) {
+    html = `<div class="info-box" style="text-align:center;padding:40px">
+      <div style="font-size:32px;margin-bottom:12px">📋</div>
+      <div style="font-size:15px;font-weight:600;color:var(--navy);margin-bottom:6px">Your plan is empty</div>
+      <div style="color:var(--text-muted);font-size:13.5px">Complete the planning sections to see your Hoshin Plan summarized here.</div>
+      <button class="btn btn-primary" style="margin-top:16px" onclick="goTo('fundamentals', navFor('fundamentals'))">Start Building →</button>
+    </div>`;
+  }
+
+  document.getElementById('summaryContent').innerHTML = html;
+}
+
+// ── EXPORT ──
+function exportJSON() {
+  const plan = {
+    organization: v('orgName'),
+    fiscalYear: v('fiscalYear'),
+    leader: v('leader'),
+    vision: v('vision'),
+    mission: v('mission'),
+    values: v('values'),
+    customers: v('customers'),
+    differentiators: v('differentiators'),
+    swot: {
+      strengths: v('strengths'),
+      weaknesses: v('weaknesses'),
+      opportunities: v('opportunities'),
+      threats: v('threats'),
+    },
+    longRangeObjectives: state.lrObjectives,
+    annualObjectives: state.objectives,
+    targetActions: state.actions,
+    alignmentMatrix: state.alignmentMatrix,
+    reviewCadence: {
+      monthly: { day: v('monthlyDay'), owner: v('monthlyOwner') },
+      quarterly: { week: v('quarterlyWeek'), owner: v('quarterlyOwner') },
+      annual: { date: v('annualDate'), owner: v('annualOwner') },
+      threshold: v('threshold'),
+    }
+  };
+
+  const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `hoshin-plan-${v('orgName')||'draft'}-${v('fiscalYear')||new Date().getFullYear()}.json`;
+  a.click();
+}
+
+function exportText() {
+  const org = v('orgName') || 'Organization';
+  const yr = v('fiscalYear') || '—';
+  let text = `HOSHIN KANRI PLAN\n${org} — Fiscal Year ${yr}\n${'═'.repeat(50)}\n\n`;
+
+  if (v('vision')) text += `VISION\n${v('vision')}\n\n`;
+  if (v('mission')) text += `MISSION\n${v('mission')}\n\n`;
+  if (v('values')) text += `VALUES\n${v('values')}\n\n`;
+
+  if (state.lrObjectives.length > 0) {
+    text += `LONG-RANGE OBJECTIVES (3–5 Year)\n${'─'.repeat(40)}\n`;
+    state.lrObjectives.forEach((o,i) => {
+      text += `${i+1}. ${o.text || 'Not defined'}\n`;
+    });
+    text += '\n';
+  }
+
+  if (state.objectives.length > 0) {
+    text += `ANNUAL OBJECTIVES\n${'─'.repeat(40)}\n`;
+    state.objectives.forEach((o,i) => {
+      text += `${i+1}. [${o.type.toUpperCase()}] ${o.metric || 'Not defined'}\n`;
+      if (o.from||o.to) text += `   Goal: ${o.from||'?'} → ${o.to||'?'} by ${o.deadline||'—'}\n`;
+      if (o.owner) text += `   Owner: ${o.owner}\n`;
+    });
+    text += '\n';
+  }
+
+  if (state.actions.length > 0) {
+    text += `TARGET ACTIONS\n${'─'.repeat(40)}\n`;
+    state.actions.forEach((a,i) => {
+      text += `${ACTION_LETTERS[i]}. ${a.what || 'Not defined'}\n`;
+      if (a.who) text += `   Who: ${a.who}\n`;
+      if (a.when) text += `   When: ${a.when}\n`;
+      text += `   Status: ${a.pct}% complete\n`;
+    });
+  }
+
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Plan summary copied to clipboard! Paste into Word, email, or any document.');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Plan summary copied to clipboard!');
+  });
+}
+
+function clearAll() {
+  if (!confirm('Reset all plan data? This cannot be undone.')) return;
+  state = { lrObjectives: [], objectives: [], actions: [], alignmentMatrix: {} };
+  ALL_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  renderLRObjs();
+  renderObjectives();
+  renderActions();
+  updateProgress();
+  localStorage.removeItem(LS_KEY);
+  showToast('Plan cleared', 'warning');
+  goTo('welcome', document.querySelector('.nav-item'));
+}
+
+// ── LOCALSTORAGE ──
+const LS_KEY = 'hoshin_plan_v1';
+const ALL_FIELDS = ['orgName','fiscalYear','leader','planLevel','vision','mission','values','customers',
+  'differentiators','strengths','weaknesses','opportunities','threats',
+  'monthlyDay','monthlyOwner','quarterlyWeek','quarterlyOwner','annualDate','annualOwner',
+  'threshold','countermeasureOwner'];
+
+let saveTimer = null;
+
+function getFieldValues() {
+  const out = {};
+  ALL_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) out[id] = el.value;
+  });
+  return out;
+}
+
+function saveToLocalStorage() {
+  const indicator = document.getElementById('saveIndicator');
+  const label = document.getElementById('saveLabel');
+  if (!indicator || !label) return;
+
+  indicator.className = 'save-indicator saving';
+  label.textContent = 'Saving…';
+
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    const snapshot = {
+      fields: getFieldValues(),
+      state: JSON.parse(JSON.stringify(state)),
+      savedAt: new Date().toISOString(),
+    };
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(snapshot));
+      indicator.className = 'save-indicator saved';
+      label.textContent = 'Saved ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+      setTimeout(() => {
+        indicator.className = 'save-indicator';
+        label.textContent = 'Auto-saved';
+      }, 3000);
+    } catch(e) {
+      indicator.className = 'save-indicator';
+      label.textContent = 'Save failed';
+    }
+  }, 800);
+}
+
+function loadFromLocalStorage() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    const snapshot = JSON.parse(raw);
+
+    // Restore fields
+    Object.entries(snapshot.fields || {}).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    });
+
+    // Restore state
+    if (snapshot.state) {
+      state.lrObjectives = snapshot.state.lrObjectives || [];
+      state.objectives   = snapshot.state.objectives   || [];
+      state.actions      = snapshot.state.actions      || [];
+      state.alignmentMatrix = snapshot.state.alignmentMatrix || {};
+    }
+
+    return snapshot.savedAt || true;
+  } catch(e) {
+    return false;
+  }
+}
+
+// Intercept all inputs to trigger auto-save
+function attachAutoSave() {
+  document.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(el => {
+    el.addEventListener('input', saveToLocalStorage);
+    el.addEventListener('change', saveToLocalStorage);
+  });
+}
+
+// MutationObserver to attach listeners to dynamically added inputs
+const observer = new MutationObserver(() => attachAutoSave());
+observer.observe(document.getElementById('objectivesList'), { childList: true, subtree: true });
+observer.observe(document.getElementById('lrObjList'),      { childList: true, subtree: true });
+observer.observe(document.getElementById('actionsList'),    { childList: true, subtree: true });
+
+// Auto-save is handled by calling saveToLocalStorage() directly in each mutating function
+
+// ── TOAST ──
+let toastTimer = null;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = (type === 'success' ? '✓ ' : type === 'warning' ? '⚠ ' : 'ℹ ') + msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 3000);
+}
+
+// ── CSV EXPORT ──
+function escapeCSV(val) {
+  if (val == null) return '';
+  const s = String(val).replace(/"/g, '""');
+  return /[",\n\r]/.test(s) ? `"${s}"` : s;
+}
+
+function buildCSV() {
+  const rows = [];
+  const R = (...cols) => rows.push(cols.map(escapeCSV).join(','));
+  const BLANK = () => rows.push('');
+  const H = (title) => { rows.push(`"${title.toUpperCase()}"`); };
+
+  H('HOSHIN KANRI PLAN');
+  R('Organization', v('orgName') || '—');
+  R('Fiscal Year', v('fiscalYear') || '—');
+  R('Leader', v('leader') || '—');
+  R('Planning Level', v('planLevel') || '—');
+  R('Exported', new Date().toLocaleString());
+  BLANK();
+
+  H('VISION & MISSION');
+  R('Vision', v('vision'));
+  R('Mission', v('mission'));
+  R('Values', v('values'));
+  R('Primary Customers', v('customers'));
+  R('Differentiators', v('differentiators'));
+  BLANK();
+
+  H('SWOT ANALYSIS');
+  R('Strengths', v('strengths'));
+  R('Weaknesses', v('weaknesses'));
+  R('Opportunities', v('opportunities'));
+  R('Threats', v('threats'));
+  BLANK();
+
+  H('LONG-RANGE OBJECTIVES (3-5 YEAR)');
+  R('#', 'Objective', 'SWOT Driver', 'Horizon');
+  state.lrObjectives.forEach((o, i) => R(i+1, o.text, o.swotLink, o.horizon));
+  BLANK();
+
+  H('ANNUAL OBJECTIVES');
+  R('#', 'Metric / What Changes', 'Type', 'Baseline (From)', 'Target (To)', 'Deadline', 'Owner', 'Measurement Category');
+  const catNames = ['','% Lower Better','% Higher Better','$ Lower Better','$ Higher Better','Units Lower Better','Units Higher Better'];
+  state.objectives.forEach((o, i) => R(i+1, o.metric, o.type, o.from, o.to, o.deadline, o.owner, catNames[o.category]||o.category));
+  BLANK();
+
+  H('TARGET ACTIONS');
+  R('Letter', 'What (Deliverable)', 'Who (Owner)', 'Due Date', '% Complete');
+  const LETTERS = ['A','B','C','D','E','F','G','H','I'];
+  state.actions.forEach((a, i) => R(LETTERS[i], a.what, a.who, a.when, a.pct + '%'));
+  BLANK();
+
+  H('ALIGNMENT MATRIX');
+  // Header row: blank, then each action letter
+  const actHeaders = state.actions.map((_, i) => 'Action ' + LETTERS[i]);
+  R('Objective', ...actHeaders);
+  state.objectives.forEach((obj, oi) => {
+    const cells = state.actions.map((_, ai) => state.alignmentMatrix[`${oi}-${ai}`] ? 'X' : '');
+    R(obj.metric || `Objective ${oi+1}`, ...cells);
+  });
+  BLANK();
+
+  H('REVIEW CADENCE');
+  R('Review Type', 'Schedule', 'Owner');
+  R('Monthly', v('monthlyDay'), v('monthlyOwner'));
+  R('Quarterly', v('quarterlyWeek'), v('quarterlyOwner'));
+  R('Annual', v('annualDate'), v('annualOwner'));
+  R('Variance Escalation Threshold', v('threshold'));
+  BLANK();
+
+  return rows.join('\n');
+}
+
+function downloadCSV() {
+  const csv = buildCSV();
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `hoshin-plan-${v('orgName')||'draft'}-${v('fiscalYear')||new Date().getFullYear()}.csv`;
+  a.click();
+  showToast('CSV downloaded', 'success');
+}
+
+// ── APPS SCRIPT GENERATOR ──
+function buildAppsScript() {
+  const org = (v('orgName') || 'Hoshin Plan').replace(/'/g, "\\'");
+  const yr  = v('fiscalYear') || new Date().getFullYear();
+  const csvData = buildCSV().replace(/\\/g, '\\\\').replace(/`/g, '\\`');
+
+  return `// Hoshin Kanri Plan Import Script
+// Generated ${new Date().toLocaleDateString()} for ${org} FY${yr}
+// Instructions: Paste into Apps Script editor (Extensions > Apps Script)
+// Then click Run > importHoshinPlan and authorize when prompted.
+
+function importHoshinPlan() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const csvData = \`${csvData}\`;
+
+  // Parse CSV
+  const rows = Utilities.parseCsv(csvData);
+
+  // Group rows into sections
+  const sections = {};
+  let currentSection = 'meta';
+  sections[currentSection] = [];
+
+  rows.forEach(row => {
+    const first = (row[0] || '').trim();
+    if (first === first.toUpperCase() && first.length > 2 && row.filter(Boolean).length === 1) {
+      currentSection = first;
+      sections[currentSection] = [];
+    } else if (row.some(Boolean)) {
+      sections[currentSection].push(row);
+    }
+  });
+
+  // Color palette
+  const NAVY   = '#0D2137';
+  const COBALT = '#1B4F8A';
+  const GOLD   = '#C8921A';
+  const WHITE  = '#FFFFFF';
+  const MIST   = '#E8EEF6';
+
+  // Helper: write a section to a sheet
+  function writeSection(sheetName, headerLabel, sectionKey, headerColor) {
+    let sheet = ss.getSheetByName(sheetName);
+    if (!sheet) sheet = ss.insertSheet(sheetName);
+    sheet.clearContents();
+    sheet.clearFormats();
+
+    // Title row
+    const titleRange = sheet.getRange(1, 1, 1, 8);
+    titleRange.merge();
+    titleRange.setValue(headerLabel);
+    titleRange.setBackground(headerColor || NAVY);
+    titleRange.setFontColor(WHITE);
+    titleRange.setFontWeight('bold');
+    titleRange.setFontSize(12);
+    titleRange.setFontFamily('Georgia');
+
+    const data = sections[sectionKey] || [];
+    if (data.length === 0) return sheet;
+
+    // Write data rows
+    data.forEach((row, i) => {
+      const r = i + 2;
+      const cols = Math.min(row.length, 8);
+      const range = sheet.getRange(r, 1, 1, cols);
+      range.setValues([row.slice(0, cols)]);
+      if (i === 0) {
+        // Header row styling
+        range.setBackground(COBALT);
+        range.setFontColor(WHITE);
+        range.setFontWeight('bold');
+        range.setFontSize(10);
+      } else {
+        range.setBackground(i % 2 === 0 ? MIST : WHITE);
+        range.setFontSize(10);
+      }
+    });
+
+    sheet.autoResizeColumns(1, 8);
+    return sheet;
+  }
+
+  // Write each section to its own tab
+  writeSection('Overview',          'Business Fundamentals & Vision',        'VISION & MISSION',        NAVY);
+  writeSection('SWOT',              'SWOT Analysis',                          'SWOT ANALYSIS',            '#166534');
+  writeSection('Long-Range',        'Long-Range Objectives (3-5 Year)',       'LONG-RANGE OBJECTIVES (3-5 YEAR)', COBALT);
+  writeSection('Annual Objectives', 'Annual Objectives',                      'ANNUAL OBJECTIVES',        COBALT);
+  writeSection('Target Actions',    'Target Actions',                         'TARGET ACTIONS',           GOLD);
+  writeSection('Matrix',            'Alignment Matrix',                       'ALIGNMENT MATRIX',         NAVY);
+  writeSection('Reviews',           'Review Cadence',                         'REVIEW CADENCE',           '#4A6274');
+
+  // Add a summary tab first
+  let summarySheet = ss.getSheetByName('Summary');
+  if (!summarySheet) summarySheet = ss.insertSheet('Summary', 0);
+  summarySheet.clearContents();
+  summarySheet.clearFormats();
+
+  const summaryData = sections['HOSHIN KANRI PLAN'] || sections['meta'] || [];
+  const titleR = summarySheet.getRange(1, 1, 1, 3);
+  titleR.merge();
+  titleR.setValue('HOSHIN KANRI PLAN — ${org} FY${yr}');
+  titleR.setBackground(NAVY);
+  titleR.setFontColor(WHITE);
+  titleR.setFontWeight('bold');
+  titleR.setFontSize(14);
+  titleR.setFontFamily('Georgia');
+
+  summaryData.forEach((row, i) => {
+    const range = summarySheet.getRange(i + 2, 1, 1, Math.min(row.length, 3));
+    range.setValues([row.slice(0, 3)]);
+    if (row[0]) {
+      summarySheet.getRange(i + 2, 1).setFontWeight('bold').setFontColor(COBALT);
+    }
+  });
+  summarySheet.autoResizeColumns(1, 3);
+  summarySheet.activate();
+
+  SpreadsheetApp.getUi().alert('✓ Hoshin Plan imported successfully!\\n\\nTabs created:\\n• Summary\\n• Overview\\n• SWOT\\n• Long-Range\\n• Annual Objectives\\n• Target Actions\\n• Matrix\\n• Reviews');
+}`;
+}
+
+// ── SHEETS MODAL ──
+function openSheetsModal() {
+  const script = buildAppsScript();
+  const preview = document.getElementById('appsScriptPreview');
+  preview.textContent = script.split('\n').slice(0, 12).join('\n') + '\n…  (' + script.split('\n').length + ' lines total)';
+  preview._fullScript = script;
+  document.getElementById('sheetsModal').classList.add('open');
+}
+
+function closeSheetsModal() {
+  document.getElementById('sheetsModal').classList.remove('open');
+}
+
+function copyAppsScript() {
+  const preview = document.getElementById('appsScriptPreview');
+  const script = preview._fullScript || buildAppsScript();
+  navigator.clipboard.writeText(script).then(() => {
+    showToast('Apps Script copied to clipboard', 'success');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = script;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Apps Script copied to clipboard', 'success');
+  });
+}
+
+// Close modal on overlay click
+document.getElementById('sheetsModal').addEventListener('click', function(e) {
+  if (e.target === this) closeSheetsModal();
+});
+
+// ── INIT ──
+const savedAt = loadFromLocalStorage();
+renderLRObjs();
+renderObjectives();
+renderActions();
+updateProgress();
+attachAutoSave();
+
+// Show restore toast if data was found
+if (savedAt) {
+  const dateStr = typeof savedAt === 'string'
+    ? new Date(savedAt).toLocaleDateString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})
+    : '';
+  const label = document.getElementById('saveLabel');
+  const indicator = document.getElementById('saveIndicator');
+  indicator.className = 'save-indicator saved';
+  label.textContent = 'Restored' + (dateStr ? ' · ' + dateStr : '');
+  setTimeout(() => {
+    indicator.className = 'save-indicator';
+    label.textContent = 'Auto-saved';
+  }, 4000);
+  showToast('Plan restored from last session', 'success');
+}
+
+// ── AI PLAN REVIEWER ──────────────────────────────────────────────────────────
+
+const API_KEY_LS = 'hoshin_api_key';
+
+function saveApiKey() {
+  const key = document.getElementById('apiKey').value.trim();
+  if (!key.startsWith('sk-ant-')) {
+    showKeyStatus('Invalid key format — should start with sk-ant-', 'error');
+    return;
+  }
+  localStorage.setItem(API_KEY_LS, key);
+  showKeyStatus('✓ API key saved', 'success');
+  showToast('API key saved', 'success');
+}
+
+function loadApiKey() {
+  const key = localStorage.getItem(API_KEY_LS) || '';
+  const el = document.getElementById('apiKey');
+  if (el && key) {
+    el.value = key;
+    showKeyStatus('✓ Key loaded from storage', 'success');
+  }
+  return key;
+}
+
+function toggleKeyVisibility() {
+  const el = document.getElementById('apiKey');
+  const btn = document.getElementById('keyToggle');
+  if (el.type === 'password') { el.type = 'text'; btn.textContent = 'Hide'; }
+  else { el.type = 'password'; btn.textContent = 'Show'; }
+}
+
+function showKeyStatus(msg, type) {
+  const el = document.getElementById('keyStatus');
+  if (!el) return;
+  el.style.display = 'block';
+  el.innerHTML = `<span style="font-size:12px;color:${type==='success'?'var(--green-light)':'var(--red-light)'}">${msg}</span>`;
+}
+
+// Scope chip toggle
+document.addEventListener('click', e => {
+  const chip = e.target.closest('.scope-chip');
+  if (!chip) return;
+  chip.classList.toggle('active');
+  chip.querySelector('input').checked = chip.classList.contains('active');
+});
+
+function getActiveScopes() {
+  return Array.from(document.querySelectorAll('.scope-chip.active input')).map(i => i.value);
+}
+
+function buildPlanSnapshot() {
+  return {
+    org: v('orgName') || '(unnamed)',
+    year: v('fiscalYear') || '(unset)',
+    vision: v('vision') || '',
+    mission: v('mission') || '',
+    values: v('values') || '',
+    customers: v('customers') || '',
+    swot: {
+      strengths: v('strengths') || '',
+      weaknesses: v('weaknesses') || '',
+      opportunities: v('opportunities') || '',
+      threats: v('threats') || '',
+    },
+    longRangeObjectives: state.lrObjectives,
+    objectives: state.objectives,
+    actions: state.actions,
+    alignmentMatrix: state.alignmentMatrix,
+  };
+}
+
+function buildReviewPrompt(plan, scopes) {
+  const catNames = ['','% Lower is Better','% Higher is Better','$ Lower is Better','$ Higher is Better','Units Lower is Better','Units Higher is Better'];
+  const LETTERS = ['A','B','C','D','E','F','G','H','I'];
+
+  return `You are a senior Hoshin Kanri planning consultant with 20 years of experience. Review this Hoshin Plan and return ONLY a valid JSON object — no markdown, no explanation outside the JSON.
+
+PLAN DATA:
+Organization: ${plan.org} | Year: ${plan.year}
+Vision: ${plan.vision || 'NOT PROVIDED'}
+Mission: ${plan.mission || 'NOT PROVIDED'}
+Values: ${plan.values || 'NOT PROVIDED'}
+Customers: ${plan.customers || 'NOT PROVIDED'}
+
+SWOT:
+Strengths: ${plan.swot.strengths || 'NOT PROVIDED'}
+Weaknesses: ${plan.swot.weaknesses || 'NOT PROVIDED'}
+Opportunities: ${plan.swot.opportunities || 'NOT PROVIDED'}
+Threats: ${plan.swot.threats || 'NOT PROVIDED'}
+
+LONG-RANGE OBJECTIVES (${plan.longRangeObjectives.length}):
+${plan.longRangeObjectives.map((o,i) => `${i+1}. "${o.text||'EMPTY'}" [${o.horizon||'no horizon'}]`).join('\n') || 'NONE'}
+
+ANNUAL OBJECTIVES (${plan.objectives.length}):
+${plan.objectives.map((o,i) => `${i+1}. [${o.type}] "${o.metric||'EMPTY'}" | ${o.from||'?'} → ${o.to||'?'} | Due: ${o.deadline||'none'} | Owner: "${o.owner||'NONE'}" | Cat: ${catNames[o.category]||o.category}`).join('\n') || 'NONE'}
+
+TARGET ACTIONS (${plan.actions.length}):
+${plan.actions.map((a,i) => `${LETTERS[i]}. "${a.what||'EMPTY'}" | Who: "${a.who||'NONE'}" | When: ${a.when||'none'} | ${a.pct}% done`).join('\n') || 'NONE'}
+
+ALIGNMENT (objectives → actions):
+${plan.objectives.map((obj,oi) => {
+  const aligned = plan.actions.map((_,ai) => plan.alignmentMatrix[`${oi}-${ai}`] ? LETTERS[ai] : null).filter(Boolean);
+  return `Obj ${oi+1} "${obj.metric||'unnamed'}": ${aligned.length ? aligned.join(', ') : 'NO ACTIONS MAPPED'}`;
+}).join('\n') || 'none'}
+
+REVIEW FOCUS: ${scopes.join(', ')}
+
+Return this exact JSON structure:
+{
+  "score": <0-100 integer>,
+  "scoreDimensions": {
+    "smartGoals": <0-100>,
+    "ownership": <0-100>,
+    "alignment": <0-100>,
+    "focus": <0-100>,
+    "measurement": <0-100>
+  },
+  "headline": "<2-sentence overall verdict referencing specific plan details>",
+  "findings": [
+    {
+      "severity": "critical|warning|good|info",
+      "category": "SMART Goals|Ownership|Alignment|Focus|Measurement|Vision|SWOT|General",
+      "title": "<short specific title>",
+      "detail": "<2-3 sentences referencing actual plan content>",
+      "fix": "<concrete next action — be specific>"
+    }
+  ],
+  "rewrites": [
+    {
+      "original": "<exact text from plan>",
+      "improved": "<rewritten SMART version>",
+      "reason": "<one sentence why>"
+    }
+  ],
+  "topPriorities": ["<action 1>", "<action 2>", "<action 3>"]
+}
+
+Rules: 4-8 findings mixing all severity levels. 0-3 rewrites only for genuinely vague goals. Be direct and specific. Reference actual text. If plan is mostly empty score 10-25.`;
+}
+
+async function runReview() {
+  const key = document.getElementById('apiKey').value.trim() || localStorage.getItem(API_KEY_LS) || '';
+  if (!key) {
+    showToast('Add your API key first', 'warning');
+    document.getElementById('apiKey').focus();
+    return;
+  }
+  const scopes = getActiveScopes();
+  if (!scopes.length) { showToast('Select at least one review scope', 'warning'); return; }
+
+  const plan = buildPlanSnapshot();
+  if (!plan.objectives.length && !plan.actions.length && !plan.vision) {
+    showToast('Add some plan content first', 'warning');
+    return;
+  }
+
+  const btn = document.getElementById('reviewBtn');
+  const status = document.getElementById('reviewStatus');
+  const results = document.getElementById('reviewResults');
+  const empty = document.getElementById('reviewEmpty');
+
+  btn.disabled = true;
+  btn.textContent = '✦ Reviewing…';
+  empty.style.display = 'none';
+  results.style.display = 'block';
+  results.innerHTML = `
+    <div class="reviewer-loading">
+      <div class="reviewer-spinner"></div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--navy)">Analyzing your plan…</div>
+      <div class="streaming-text">Checking SMART structure, ownership, action alignment, measurement categories, and overall plan balance.</div>
+    </div>`;
+  status.textContent = 'Calling AI…';
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: buildReviewPrompt(plan, scopes) }],
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error ${response.status}`);
+    }
+
+    const data = await response.json();
+    const raw = (data.content?.[0]?.text || '').replace(/^```json\s*/,'').replace(/```\s*$/,'').trim();
+    const review = JSON.parse(raw);
+    renderReview(review);
+    status.textContent = '';
+    showToast('Review complete', 'success');
+
+  } catch(err) {
+    results.innerHTML = `
+      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius);padding:20px 24px;color:var(--red)">
+        <div style="font-weight:700;margin-bottom:6px">Review failed</div>
+        <div style="font-size:13px">${err.message}</div>
+        <div style="font-size:12px;margin-top:8px;color:var(--text-muted)">Check your API key at console.anthropic.com and ensure you have available credits.</div>
+      </div>`;
+    status.textContent = '';
+    showToast('Review failed — check API key', 'warning');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✦ Review My Plan';
+  }
+}
+
+function renderReview(review) {
+  const score = Math.max(0, Math.min(100, review.score || 0));
+  const scoreColor = score >= 75 ? '#16a34a' : score >= 50 ? '#C8921A' : '#dc2626';
+  const scoreLabel = score >= 75 ? 'Strong Plan' : score >= 50 ? 'Needs Work' : 'Major Gaps';
+  const circ = 238.76;
+  const dash = (score / 100) * circ;
+
+  document.getElementById('scoreCard').innerHTML = `
+    <div class="score-ring-wrap">
+      <div class="score-ring">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="7"/>
+          <circle cx="45" cy="45" r="38" fill="none" stroke="${scoreColor}" stroke-width="7"
+            stroke-dasharray="${dash} ${circ}" stroke-linecap="round"/>
+        </svg>
+        <div class="score-num">${score}</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px">${scoreLabel}</div>
+        <div style="font-size:13.5px;opacity:0.75;line-height:1.55;margin-bottom:14px">${review.headline || ''}</div>
+        <div class="score-breakdown">
+          ${Object.entries(review.scoreDimensions || {}).map(([k,val]) => `
+            <div class="score-dim">
+              <strong>${val}</strong>
+              ${k.replace(/([A-Z])/g,' $1').trim()}
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  const findings = [...(review.findings || [])].sort((a,b) =>
+    ({critical:0,warning:1,info:2,good:3}[a.severity]||9) - ({critical:0,warning:1,info:2,good:3}[b.severity]||9));
+
+  document.getElementById('findingsContainer').innerHTML = `
+    <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--navy);margin:24px 0 12px">
+      Findings <span style="font-size:13px;font-weight:400;font-family:'DM Sans',sans-serif;color:var(--text-muted)">${findings.length} items</span>
+    </div>
+    ${findings.map(f => `
+      <div class="finding-card">
+        <div class="finding-card-header ${f.severity}">
+          <span class="finding-severity sev-${f.severity}">${f.severity}</span>
+          <span class="finding-title">${f.category} — ${f.title}</span>
+        </div>
+        <div class="finding-body">
+          <p>${f.detail}</p>
+          ${f.fix ? `<div class="finding-fix"><strong>Fix:</strong> ${f.fix}</div>` : ''}
+        </div>
+      </div>`).join('')}`;
+
+  const rewrites = review.rewrites || [];
+  document.getElementById('rewriteContainer').innerHTML = rewrites.length ? `
+    <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--navy);margin:24px 0 12px">
+      Suggested Goal Rewrites
+    </div>
+    ${rewrites.map(r => `
+      <div class="rewrite-card">
+        <div class="rewrite-card-header">
+          <span class="label">✦ Improved</span>
+          <span class="original">${r.original}</span>
+        </div>
+        <div class="rewrite-card-body">
+          "${r.improved}"
+          <div style="font-size:12px;color:var(--text-muted);margin-top:6px;font-style:italic">${r.reason}</div>
+        </div>
+      </div>`).join('')}` : '';
+
+  const priorities = review.topPriorities || [];
+  document.getElementById('overallSummary').innerHTML = priorities.length ? `
+    <div style="background:var(--navy);border-radius:var(--radius);padding:22px 24px;margin-top:20px;color:#fff">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:14px;color:var(--gold-light)">
+        Top ${priorities.length} Priorities Before You Finalize
+      </div>
+      ${priorities.map((p,i) => `
+        <div style="display:flex;gap:12px;align-items:flex-start;${i<priorities.length-1?'margin-bottom:12px':''}">
+          <div style="width:24px;height:24px;background:var(--gold);color:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${i+1}</div>
+          <div style="font-size:13.5px;line-height:1.55;padding-top:3px">${p}</div>
+        </div>`).join('')}
+    </div>` : '';
+}
+
+// Load saved API key on startup
+loadApiKey();
+
+</script>
+</body>
+</html>
