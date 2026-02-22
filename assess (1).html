@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategic Execution Readiness Assessment</title>
+<meta name="description" content="Find out where your business stands on strategic execution — and what to fix first. Free 3-minute assessment for CEOs.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f1a14;
+  --forest: #1a3327;
+  --moss: #2d5040;
+  --sage: #4a7860;
+  --gold: #b8943a;
+  --gold-light: #d4ad5a;
+  --gold-pale: #f0e4c4;
+  --cream: #faf7f0;
+  --warm-white: #fdfcf9;
+  --parchment: #f2ede0;
+  --border: #d8d4c8;
+  --text: #2a3328;
+  --text-mid: #4a5a50;
+  --text-muted: #7a8a7e;
+  --red: #8b2020;
+  --amber: #8b5e1a;
+  --green: #1a5c38;
+  --shadow: 0 4px 24px rgba(15,26,20,0.1), 0 1px 4px rgba(15,26,20,0.06);
+  --shadow-lg: 0 20px 60px rgba(15,26,20,0.15);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* ── LAYOUT ── */
+.shell {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--forest);
+  padding: 48px 40px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar::before {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  right: -80px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(184,148,58,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.sidebar-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 48px;
+  display: block;
+}
+
+.sidebar-brand span { color: var(--gold); }
+
+.sidebar-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+
+.sidebar-title em { font-style: italic; color: var(--gold-light); }
+
+.sidebar-desc {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.65;
+  margin-bottom: 48px;
+}
+
+/* Progress Steps */
+.progress-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.progress-steps::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 20px;
+  bottom: 20px;
+  width: 1px;
+  background: rgba(255,255,255,0.1);
+}
+
+.step-indicator {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 10px 0;
+  transition: all 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+.step-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: all 0.3s;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.3);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+}
+
+.step-indicator.active .step-dot {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+  box-shadow: 0 0 0 4px rgba(184,148,58,0.2);
+}
+
+.step-indicator.complete .step-dot {
+  background: var(--moss);
+  border-color: var(--sage);
+  color: rgba(255,255,255,0.8);
+  font-size: 12px;
+}
+
+.step-info {}
+
+.step-name {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.3);
+  transition: color 0.3s;
+  line-height: 1.3;
+}
+
+.step-indicator.active .step-name { color: rgba(255,255,255,0.9); }
+.step-indicator.complete .step-name { color: rgba(255,255,255,0.5); }
+
+.step-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  margin-top: 1px;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-footer p {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.3);
+  line-height: 1.6;
+}
+
+.sidebar-footer a {
+  color: var(--gold-light);
+  text-decoration: none;
+}
+
+/* ── MAIN CONTENT ── */
+.main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 60px;
+  min-height: 100vh;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 620px;
+}
+
+/* Progress bar */
+.progress-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.progress-bar-track {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--forest), var(--gold));
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-label {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Question card */
+.question-card {
+  display: none;
+  animation: slideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.question-card.active { display: block; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-20px); }
+}
+
+.question-eyebrow {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.question-eyebrow::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.question-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 400;
+  color: var(--forest);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.question-title em { font-style: italic; color: var(--gold); }
+
+.question-hint {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 36px;
+  line-height: 1.6;
+}
+
+/* Option cards */
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+
+.options-grid.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.option-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.18s;
+  background: var(--warm-white);
+  position: relative;
+  user-select: none;
+}
+
+.option-card:hover {
+  border-color: var(--sage);
+  background: #fff;
+  transform: translateX(3px);
+}
+
+.option-card.selected {
+  border-color: var(--forest);
+  background: rgba(26,51,39,0.04);
+  box-shadow: 0 0 0 1px var(--forest);
+}
+
+.option-marker {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s;
+  font-size: 11px;
+  color: transparent;
+}
+
+.option-card.selected .option-marker {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: #fff;
+}
+
+.option-body {}
+
+.option-label {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.option-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* Multi-select hint */
+.multi-hint {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+/* Scale input */
+.scale-wrap {
+  margin-bottom: 36px;
+}
+
+.scale-track {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.scale-btn {
+  flex: 1;
+  aspect-ratio: 1;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: var(--warm-white);
+  cursor: pointer;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  color: var(--text-muted);
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scale-btn:hover { border-color: var(--sage); background: #fff; }
+
+.scale-btn.selected {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Text input */
+.text-input-wrap {
+  margin-bottom: 36px;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 16px 20px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14.5px;
+  color: var(--text);
+  background: var(--warm-white);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  resize: none;
+  outline: none;
+  transition: all 0.18s;
+  line-height: 1.6;
+  min-height: 120px;
+}
+
+.form-textarea:focus {
+  border-color: var(--forest);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(26,51,39,0.07);
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px 18px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14.5px;
+  color: var(--text);
+  background: var(--warm-white);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.18s;
+  margin-bottom: 12px;
+}
+
+.form-input:focus {
+  border-color: var(--forest);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(26,51,39,0.07);
+}
+
+/* Navigation */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--text-muted);
+  padding: 12px 22px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
+  transition: all 0.18s;
+}
+
+.btn-back:hover { border-color: var(--text-mid); color: var(--text); }
+
+.btn-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--forest);
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 4px;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border: none;
+  font-family: 'Instrument Sans', sans-serif;
+  transition: all 0.18s;
+}
+
+.btn-next:hover { background: var(--moss); transform: translateX(3px); }
+.btn-next:disabled { opacity: 0.4; pointer-events: none; }
+
+.btn-submit {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.btn-submit:hover { background: var(--gold-light); transform: translateX(3px); }
+
+/* ── RESULTS PAGE ── */
+.results-page {
+  display: none;
+  width: 100%;
+  max-width: 680px;
+  animation: slideIn 0.4s ease;
+}
+
+.results-page.active { display: block; }
+
+.score-hero {
+  background: var(--forest);
+  border-radius: 8px;
+  padding: 44px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.score-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(184,148,58,0.12) 0%, transparent 70%);
+}
+
+.score-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold-light);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.score-label::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.score-layout {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.score-ring-wrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+}
+
+.score-ring-wrap svg { transform: rotate(-90deg); }
+
+.score-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.score-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px;
+  font-weight: 300;
+  color: #fff;
+  line-height: 1;
+}
+
+.score-denom {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 2px;
+}
+
+.score-text {}
+
+.score-verdict {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.score-verdict em { font-style: italic; color: var(--gold-light); }
+
+.score-tagline {
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.55;
+}
+
+.score-dims {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  margin-top: 28px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.score-dim {
+  background: rgba(15,26,20,0.4);
+  padding: 16px;
+  text-align: center;
+}
+
+.dim-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.dim-val.high { color: #4ade80; }
+.dim-val.mid  { color: var(--gold-light); }
+.dim-val.low  { color: #f87171; }
+
+.dim-label {
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+}
+
+/* AI Summary */
+.ai-summary {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: 6px;
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.ai-summary-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-summary-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17.5px;
+  font-style: italic;
+  color: var(--forest);
+  line-height: 1.7;
+}
+
+/* Finding cards */
+.finding {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.18s;
+}
+
+.finding:hover { transform: translateX(3px); }
+
+.finding-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+}
+
+.finding-head.critical { background: #fef2f2; border-left: 4px solid #dc2626; }
+.finding-head.warning  { background: #fffbeb; border-left: 4px solid var(--gold); }
+.finding-head.strength { background: #f0fdf4; border-left: 4px solid #16a34a; }
+
+.finding-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 2px 8px;
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+
+.finding-badge.critical { background: #fee2e2; color: #991b1b; }
+.finding-badge.warning  { background: #fef3c7; color: #92400e; }
+.finding-badge.strength { background: #dcfce7; color: #166534; }
+
+.finding-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.finding-body {
+  padding: 14px 20px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  border-top: 1px solid var(--border);
+}
+
+.finding-body strong { color: var(--forest); }
+
+/* CTA block */
+.results-cta {
+  background: var(--forest);
+  border-radius: 8px;
+  padding: 36px;
+  text-align: center;
+  margin-top: 28px;
+  box-shadow: var(--shadow-lg);
+}
+
+.results-cta h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.results-cta h3 em { font-style: italic; color: var(--gold-light); }
+
+.results-cta p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 28px;
+  line-height: 1.6;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--gold);
+  color: var(--ink);
+  padding: 15px 36px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
+  transition: all 0.18s;
+  margin-bottom: 14px;
+}
+
+.btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,148,58,0.3); }
+
+/* Loading state */
+.loading-state {
+  display: none;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.loading-state.active { display: block; }
+
+.loader-ring {
+  width: 56px;
+  height: 56px;
+  border: 3px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto 24px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--forest);
+  margin-bottom: 8px;
+}
+
+.loading-sub {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.loading-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 28px;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+.loading-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.loading-step .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.loading-step.done { color: var(--forest); }
+.loading-step.done .dot { background: var(--gold); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* API key prompt */
+.api-prompt {
+  background: rgba(184,148,58,0.08);
+  border: 1px solid rgba(184,148,58,0.25);
+  border-radius: 6px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.api-prompt strong { color: var(--forest); }
+
+.api-key-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.api-key-input {
+  flex: 1;
+  padding: 10px 14px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  background: #fff;
+  outline: none;
+  color: var(--text);
+}
+
+.api-key-input:focus { border-color: var(--forest); }
+
+.api-key-btn {
+  padding: 10px 18px;
+  background: var(--forest);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
+  transition: background 0.18s;
+  white-space: nowrap;
+}
+
+.api-key-btn:hover { background: var(--moss); }
+
+/* Responsive */
+@media (max-width: 860px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; padding: 32px 24px; }
+  .progress-steps { display: none; }
+  .main { padding: 40px 24px; }
+  .score-dims { grid-template-columns: 1fr; }
+  .score-layout { flex-direction: column; text-align: center; }
+  .options-grid.two-col { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-brand">Hoshin<span>.</span></a>
+
+    <div class="sidebar-title">
+      How ready is your business to <em>execute strategy?</em>
+    </div>
+    <p class="sidebar-desc">8 questions. 3 minutes. A personalized readiness score and specific gaps to address — generated for your business.</p>
+
+    <div class="progress-steps" id="stepIndicators">
+      <div class="step-indicator active" data-step="0">
+        <div class="step-dot">1</div>
+        <div class="step-info">
+          <div class="step-name">Company Context</div>
+          <div class="step-sub">Size & stage</div>
+        </div>
+      </div>
+      <div class="step-indicator" data-step="1">
+        <div class="step-dot">2</div>
+        <div class="step-info">
+          <div class="step-name">Current Planning</div>
+          <div class="step-sub">What you've tried</div>
+        </div>
+      </div>
+      <div class="step-indicator" data-step="2">
+        <div class="step-dot">3</div>
+        <div class="step-info">
+          <div class="step-name">Team Alignment</div>
+          <div class="step-sub">How synced is the team</div>
+        </div>
+      </div>
+      <div class="step-indicator" data-step="3">
+        <div class="step-dot">4</div>
+        <div class="step-info">
+          <div class="step-name">Execution Gaps</div>
+          <div class="step-sub">Where plans break down</div>
+        </div>
+      </div>
+      <div class="step-indicator" data-step="4">
+        <div class="step-dot">5</div>
+        <div class="step-info">
+          <div class="step-name">Biggest Frustration</div>
+          <div class="step-sub">In your own words</div>
+        </div>
+      </div>
+      <div class="step-indicator" data-step="5">
+        <div class="step-dot">6</div>
+        <div class="step-info">
+          <div class="step-name">Vision of Success</div>
+          <div class="step-sub">What great looks like</div>
+        </div>
+      </div>
+      <div class="step-indicator" data-step="6">
+        <div class="step-dot">7</div>
+        <div class="step-info">
+          <div class="step-name">Review Habits</div>
+          <div class="step-sub">How you track progress</div>
+        </div>
+      </div>
+      <div class="step-indicator" data-step="7">
+        <div class="step-dot">8</div>
+        <div class="step-info">
+          <div class="step-name">Your Details</div>
+          <div class="step-sub">Get your results</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <p>Your answers are used only to generate your personal assessment. We don't sell or share your information. <a href="#">Privacy policy →</a></p>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- FORM -->
+    <div class="form-container" id="formContainer">
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <div class="progress-label" id="progressLabel">1 of 8</div>
+      </div>
+
+      <!-- Q1: Company Size -->
+      <div class="question-card active" data-q="0">
+        <div class="question-eyebrow">Company Context</div>
+        <h2 class="question-title">What's your company's annual revenue?</h2>
+        <p class="question-hint">This helps us calibrate what "good" looks like for a business at your stage.</p>
+        <div class="options-grid">
+          <div class="option-card" data-val="under2m" onclick="selectOption(this, 0)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">Under $2M</div>
+              <div class="option-desc">Early stage, still finding operational rhythm</div>
+            </div>
+          </div>
+          <div class="option-card" data-val="2to10m" onclick="selectOption(this, 0)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">$2M – $10M</div>
+              <div class="option-desc">Growing — coordination starting to get complex</div>
+            </div>
+          </div>
+          <div class="option-card" data-val="10to30m" onclick="selectOption(this, 0)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">$10M – $30M</div>
+              <div class="option-desc">Established — misalignment is costing real money</div>
+            </div>
+          </div>
+          <div class="option-card" data-val="over30m" onclick="selectOption(this, 0)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">Over $30M</div>
+              <div class="option-desc">Scale-up — execution complexity is the core challenge</div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <div></div>
+          <button class="btn-next" id="next-0" onclick="nextQuestion(0)" disabled>Continue →</button>
+        </div>
+      </div>
+
+      <!-- Q2: Planning history -->
+      <div class="question-card" data-q="1">
+        <div class="question-eyebrow">Current Planning</div>
+        <h2 class="question-title">What planning <em>frameworks</em> have you used?</h2>
+        <p class="question-hint">Select all that apply. Be honest — there are no wrong answers here.</p>
+        <div class="multi-hint">Select all that apply</div>
+        <div class="options-grid two-col">
+          <div class="option-card multi" data-val="none" onclick="toggleOption(this, 1)">
+            <div class="option-marker">✓</div>
+            <div class="option-body"><div class="option-label">No formal system</div><div class="option-desc">We plan informally</div></div>
+          </div>
+          <div class="option-card multi" data-val="okrs" onclick="toggleOption(this, 1)">
+            <div class="option-marker">✓</div>
+            <div class="option-body"><div class="option-label">OKRs</div><div class="option-desc">Objectives & Key Results</div></div>
+          </div>
+          <div class="option-card multi" data-val="eos" onclick="toggleOption(this, 1)">
+            <div class="option-marker">✓</div>
+            <div class="option-body"><div class="option-label">EOS / Traction</div><div class="option-desc">Entrepreneurial Operating System</div></div>
+          </div>
+          <div class="option-card multi" data-val="strategic_plan" onclick="toggleOption(this, 1)">
+            <div class="option-marker">✓</div>
+            <div class="option-body"><div class="option-label">Annual strategic plan</div><div class="option-desc">Offsite + document</div></div>
+          </div>
+          <div class="option-card multi" data-val="balanced_scorecard" onclick="toggleOption(this, 1)">
+            <div class="option-marker">✓</div>
+            <div class="option-body"><div class="option-label">Balanced Scorecard</div><div class="option-desc">KPI framework</div></div>
+          </div>
+          <div class="option-card multi" data-val="hoshin" onclick="toggleOption(this, 1)">
+            <div class="option-marker">✓</div>
+            <div class="option-body"><div class="option-label">Hoshin Kanri</div><div class="option-desc">Already familiar with it</div></div>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-back" onclick="prevQuestion(1)">← Back</button>
+          <button class="btn-next" id="next-1" onclick="nextQuestion(1)" disabled>Continue →</button>
+        </div>
+      </div>
+
+      <!-- Q3: Team alignment scale -->
+      <div class="question-card" data-q="2">
+        <div class="question-eyebrow">Team Alignment</div>
+        <h2 class="question-title">How aligned is your leadership team <em>right now?</em></h2>
+        <p class="question-hint">If you asked each leader to name the company's top 3 priorities, how similar would the answers be?</p>
+        <div class="scale-wrap">
+          <div class="scale-track" id="scale-2">
+            <div class="scale-btn" data-val="1" onclick="selectScale(this, 2)">1</div>
+            <div class="scale-btn" data-val="2" onclick="selectScale(this, 2)">2</div>
+            <div class="scale-btn" data-val="3" onclick="selectScale(this, 2)">3</div>
+            <div class="scale-btn" data-val="4" onclick="selectScale(this, 2)">4</div>
+            <div class="scale-btn" data-val="5" onclick="selectScale(this, 2)">5</div>
+          </div>
+          <div class="scale-labels">
+            <span>Completely misaligned — everyone has different priorities</span>
+            <span>Fully aligned — everyone is on the same page</span>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-back" onclick="prevQuestion(2)">← Back</button>
+          <button class="btn-next" id="next-2" onclick="nextQuestion(2)" disabled>Continue →</button>
+        </div>
+      </div>
+
+      <!-- Q4: Where plans break down -->
+      <div class="question-card" data-q="3">
+        <div class="question-eyebrow">Execution Gaps</div>
+        <h2 class="question-title">Where do plans typically <em>break down</em> in your business?</h2>
+        <p class="question-hint">Pick the one that hits closest to home.</p>
+        <div class="options-grid">
+          <div class="option-card" data-val="planning" onclick="selectOption(this, 3)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">The plan itself is too vague</div>
+              <div class="option-desc">Goals aren't specific or measurable enough to act on</div>
+            </div>
+          </div>
+          <div class="option-card" data-val="ownership" onclick="selectOption(this, 3)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">Nobody owns the outcomes</div>
+              <div class="option-desc">Accountability is diffuse — when something slips, it's unclear who's responsible</div>
+            </div>
+          </div>
+          <div class="option-card" data-val="visibility" onclick="selectOption(this, 3)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">We find out too late</div>
+              <div class="option-desc">Problems surface in quarterly reviews, not in time to course-correct</div>
+            </div>
+          </div>
+          <div class="option-card" data-val="urgent" onclick="selectOption(this, 3)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">The urgent beats the important</div>
+              <div class="option-desc">Day-to-day fires crowd out strategic priorities within weeks</div>
+            </div>
+          </div>
+          <div class="option-card" data-val="followthrough" onclick="selectOption(this, 3)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">There's no review system</div>
+              <div class="option-desc">We build a plan but never formally check in on it</div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-back" onclick="prevQuestion(3)">← Back</button>
+          <button class="btn-next" id="next-3" onclick="nextQuestion(3)" disabled>Continue →</button>
+        </div>
+      </div>
+
+      <!-- Q5: Biggest frustration (open text) -->
+      <div class="question-card" data-q="4">
+        <div class="question-eyebrow">In Your Own Words</div>
+        <h2 class="question-title">What's your biggest strategic frustration <em>right now?</em></h2>
+        <p class="question-hint">Write whatever comes to mind — this is the most important question. The more specific, the more useful your assessment will be.</p>
+        <div class="text-input-wrap">
+          <textarea class="form-textarea" id="frustration" rows="5" placeholder="e.g. 'We keep having the same conversations every quarter and nothing changes. My team works hard but I'm not sure we're working on the right things…'" oninput="checkTextAnswer(4, this)"></textarea>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-back" onclick="prevQuestion(4)">← Back</button>
+          <button class="btn-next" id="next-4" onclick="nextQuestion(4)" disabled>Continue →</button>
+        </div>
+      </div>
+
+      <!-- Q6: Vision of success (open text) -->
+      <div class="question-card" data-q="5">
+        <div class="question-eyebrow">Vision of Success</div>
+        <h2 class="question-title">What would a <em>great 2026</em> look like for your business?</h2>
+        <p class="question-hint">Describe it in concrete terms — revenue, team, market position, or whatever matters most to you.</p>
+        <div class="text-input-wrap">
+          <textarea class="form-textarea" id="vision2026" rows="5" placeholder="e.g. 'We hit $18M in revenue, opened a second location, and I finally feel like the leadership team is running independently without me in every decision…'" oninput="checkTextAnswer(5, this)"></textarea>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-back" onclick="prevQuestion(5)">← Back</button>
+          <button class="btn-next" id="next-5" onclick="nextQuestion(5)" disabled>Continue →</button>
+        </div>
+      </div>
+
+      <!-- Q7: Review habits -->
+      <div class="question-card" data-q="6">
+        <div class="question-eyebrow">Review Habits</div>
+        <h2 class="question-title">How do you currently track progress <em>against goals?</em></h2>
+        <p class="question-hint">Pick the option that best describes your current reality, not your intention.</p>
+        <div class="options-grid">
+          <div class="option-card" data-val="no_review" onclick="selectOption(this, 6)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">We don't have a formal process</div>
+              <div class="option-desc">Goals are set but not regularly reviewed as a team</div>
+            </div>
+          </div>
+          <div class="option-card" data-val="quarterly" onclick="selectOption(this, 6)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">Quarterly business reviews</div>
+              <div class="option-desc">We look back every 90 days — but it's often too late to correct</div>
+            </div>
+          </div>
+          <div class="option-card" data-val="monthly" onclick="selectOption(this, 6)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">Monthly reviews with some structure</div>
+              <div class="option-desc">We check in monthly but it's inconsistent or surface-level</div>
+            </div>
+          </div>
+          <div class="option-card" data-val="structured" onclick="selectOption(this, 6)">
+            <div class="option-marker">✓</div>
+            <div class="option-body">
+              <div class="option-label">Structured monthly + quarterly cadence</div>
+              <div class="option-desc">We have a real rhythm with actuals, variances, and countermeasures</div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-back" onclick="prevQuestion(6)">← Back</button>
+          <button class="btn-next" id="next-6" onclick="nextQuestion(6)" disabled>Continue →</button>
+        </div>
+      </div>
+
+      <!-- Q8: Contact info -->
+      <div class="question-card" data-q="7">
+        <div class="question-eyebrow">Almost There</div>
+        <h2 class="question-title">Where should we send <em>your results?</em></h2>
+        <p class="question-hint">Your personalized readiness score will display instantly. Enter your details below.</p>
+
+        <input class="form-input" type="text" id="firstName" placeholder="First name" oninput="checkContactForm()">
+        <input class="form-input" type="text" id="lastName" placeholder="Last name" oninput="checkContactForm()">
+        <input class="form-input" type="email" id="email" placeholder="Work email address" oninput="checkContactForm()">
+        <input class="form-input" type="text" id="companyName" placeholder="Company name" oninput="checkContactForm()">
+
+        <div class="nav-actions" style="margin-top:8px">
+          <button class="btn-back" onclick="prevQuestion(7)">← Back</button>
+          <button class="btn-next btn-submit" id="next-7" onclick="submitAssessment()" disabled>Get My Results →</button>
+        </div>
+      </div>
+
+    </div><!-- /form-container -->
+
+    <!-- LOADING -->
+    <div class="loading-state" id="loadingState">
+      <div class="loader-ring"></div>
+      <div class="loading-title">Analyzing your responses…</div>
+      <div class="loading-sub">Building your personalized readiness assessment</div>
+      <div class="loading-steps">
+        <div class="loading-step" id="ls1" style="animation-delay:0.3s"><div class="dot"></div> Calculating execution readiness score</div>
+        <div class="loading-step" id="ls2" style="animation-delay:0.9s"><div class="dot"></div> Identifying your primary execution gaps</div>
+        <div class="loading-step" id="ls3" style="animation-delay:1.5s"><div class="dot"></div> Generating personalized recommendations</div>
+        <div class="loading-step" id="ls4" style="animation-delay:2.1s"><div class="dot"></div> Writing your custom analysis</div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-page" id="resultsPage">
+      <div id="scoreHero"></div>
+      <div id="aiSummaryBlock"></div>
+      <div id="findingsBlock"></div>
+      <div id="ctaBlock"></div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── STATE ──
+const answers = {
+  revenue: null,
+  frameworks: [],
+  alignment: null,
+  breakdown: null,
+  frustration: '',
+  vision: '',
+  reviewHabits: null,
+  name: '',
+  email: '',
+  company: '',
+};
+
+let currentQ = 0;
+const TOTAL = 8;
+
+// ── NAVIGATION ──
+function updateProgress() {
+  const pct = (currentQ / TOTAL) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${currentQ + 1} of ${TOTAL}`;
+
+  document.querySelectorAll('.step-indicator').forEach((el, i) => {
+    el.classList.remove('active', 'complete');
+    if (i === currentQ) el.classList.add('active');
+    else if (i < currentQ) el.classList.add('complete');
+    // Update dot content for complete steps
+    const dot = el.querySelector('.step-dot');
+    if (i < currentQ) dot.textContent = '✓';
+    else dot.textContent = i + 1;
+  });
+}
+
+function nextQuestion(q) {
+  document.querySelector(`[data-q="${q}"]`).classList.remove('active');
+  currentQ = q + 1;
+  const next = document.querySelector(`[data-q="${currentQ}"]`);
+  if (next) {
+    next.classList.add('active');
+    next.style.animation = 'none';
+    next.offsetHeight; // reflow
+    next.style.animation = '';
+  }
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevQuestion(q) {
+  document.querySelector(`[data-q="${q}"]`).classList.remove('active');
+  currentQ = q - 1;
+  const prev = document.querySelector(`[data-q="${currentQ}"]`);
+  if (prev) prev.classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── OPTION SELECTION ──
+function selectOption(el, q) {
+  el.closest('.options-grid').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+
+  const val = el.dataset.val;
+  if (q === 0) answers.revenue = val;
+  else if (q === 3) answers.breakdown = val;
+  else if (q === 6) answers.reviewHabits = val;
+
+  document.getElementById(`next-${q}`).disabled = false;
+}
+
+function toggleOption(el, q) {
+  el.classList.toggle('selected');
+  const selected = [...el.closest('.options-grid').querySelectorAll('.option-card.selected')].map(c => c.dataset.val);
+  answers.frameworks = selected;
+  document.getElementById(`next-${q}`).disabled = selected.length === 0;
+}
+
+function selectScale(el, q) {
+  el.closest('.scale-track').querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  answers.alignment = parseInt(el.dataset.val);
+  document.getElementById(`next-${q}`).disabled = false;
+}
+
+function checkTextAnswer(q, el) {
+  const val = el.value.trim();
+  if (q === 4) answers.frustration = val;
+  if (q === 5) answers.vision = val;
+  document.getElementById(`next-${q}`).disabled = val.length < 10;
+}
+
+function checkContactForm() {
+  const fn = document.getElementById('firstName').value.trim();
+  const ln = document.getElementById('lastName').value.trim();
+  const em = document.getElementById('email').value.trim();
+  const co = document.getElementById('companyName').value.trim();
+  const valid = fn && ln && em.includes('@') && co;
+  document.getElementById('next-7').disabled = !valid;
+  if (valid) {
+    answers.name = fn + ' ' + ln;
+    answers.email = em;
+    answers.company = co;
+  }
+}
+
+// ── SCORING ──
+function calculateScore() {
+  let score = 0;
+  const dims = { vision: 0, alignment: 0, execution: 0, measurement: 0, accountability: 0 };
+
+  // Revenue/size — context only, doesn't affect score directly
+  // Frameworks — having tried things = some intentionality
+  const fLen = answers.frameworks.length;
+  if (fLen === 0 || answers.frameworks.includes('none')) {
+    dims.execution += 5;
+  } else if (answers.frameworks.includes('hoshin')) {
+    dims.execution += 20;
+  } else {
+    dims.execution += Math.min(fLen * 6, 15);
+  }
+
+  // Alignment
+  const align = answers.alignment || 1;
+  dims.alignment = align * 16; // max 80
+
+  // Breakdown gap
+  const breakdownScores = {
+    planning: { execution: 5, vision: 5 },
+    ownership: { accountability: 5 },
+    visibility: { measurement: 5 },
+    urgent: { execution: 5, alignment: 5 },
+    followthrough: { measurement: 5 },
+  };
+  const gap = answers.breakdown;
+  if (gap && breakdownScores[gap]) {
+    Object.entries(breakdownScores[gap]).forEach(([k, v]) => dims[k] = Math.max(0, (dims[k] || 0) - v));
+  }
+
+  // Review habits
+  const reviewScores = { no_review: 0, quarterly: 10, monthly: 16, structured: 24 };
+  dims.measurement += reviewScores[answers.reviewHabits] || 0;
+
+  // Vision text quality (length proxy)
+  const vLen = (answers.vision || '').length;
+  dims.vision += vLen > 100 ? 18 : vLen > 50 ? 12 : vLen > 20 ? 8 : 4;
+
+  // Normalize each dim to 0–100
+  Object.keys(dims).forEach(k => {
+    dims[k] = Math.min(100, Math.max(0, dims[k]));
+  });
+
+  // Weighted average
+  score = Math.round(
+    dims.alignment * 0.25 +
+    dims.execution * 0.20 +
+    dims.measurement * 0.20 +
+    dims.accountability * 0.18 +
+    dims.vision * 0.17
+  );
+
+  return { score: Math.min(95, Math.max(12, score)), dims };
+}
+
+function getVerdict(score) {
+  if (score >= 75) return { label: 'Strong Foundation', em: 'Ready to scale execution', color: '#4ade80', desc: 'Your business has the fundamentals in place. The opportunity is to systematize what\'s working and raise the ceiling on execution quality.' };
+  if (score >= 55) return { label: 'Functional — But Fragile', em: 'One quarter from a crisis', color: '#fbbf24', desc: 'You\'re executing on some things well, but the system is held together by specific people rather than a reliable process. A key departure or rapid growth will expose the cracks.' };
+  if (score >= 35) return { label: 'Significant Gaps', em: 'Strategy is leaking value', color: '#fb923c', desc: 'The intent is there but the infrastructure isn\'t. Your team is likely working hard on different things. There is a real cost to misalignment that compounds every month.' };
+  return { label: 'Starting From Scratch', em: 'High upside — clear path', color: '#f87171', desc: 'No formal system means no ceiling either. The good news: companies that build Hoshin from the ground up often see faster results than those unlearning bad habits.' };
+}
+
+function getDimLabel(val) {
+  if (val >= 65) return 'high';
+  if (val >= 35) return 'mid';
+  return 'low';
+}
+
+// ── SUBMISSION ──
+async function submitAssessment() {
+  const fn = document.getElementById('firstName').value.trim();
+  const ln = document.getElementById('lastName').value.trim();
+  answers.name = fn + ' ' + ln;
+  answers.email = document.getElementById('email').value.trim();
+  answers.company = document.getElementById('companyName').value.trim();
+
+  // Hide form, show loading
+  document.getElementById('formContainer').style.display = 'none';
+  const loading = document.getElementById('loadingState');
+  loading.classList.add('active');
+
+  // Animate loading steps
+  ['ls1','ls2','ls3','ls4'].forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      el.classList.add('done');
+      el.querySelector('.dot').style.background = 'var(--gold)';
+    }, (i + 1) * 700);
+  });
+
+  const { score, dims } = calculateScore();
+  const verdict = getVerdict(score);
+
+  // Wait minimum time so loading feels real
+  await new Promise(r => setTimeout(r, 3200));
+
+  loading.classList.remove('active');
+  renderResults(score, dims, verdict, null);
+}
+
+// ── RENDER RESULTS ──
+function renderResults(score, dims, verdict, aiNarrative) {
+  const circ = 283;
+  const dash = (score / 100) * circ;
+  const firstName = answers.name.split(' ')[0];
+
+  // Score hero
+  document.getElementById('scoreHero').innerHTML = `
+    <div class="score-hero">
+      <div class="score-label">Strategic Execution Readiness — ${answers.company}</div>
+      <div class="score-layout">
+        <div class="score-ring-wrap">
+          <svg width="110" height="110" viewBox="0 0 110 110">
+            <circle cx="55" cy="55" r="45" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+            <circle cx="55" cy="55" r="45" fill="none" stroke="${verdict.color}" stroke-width="8"
+              stroke-dasharray="${dash} ${circ}" stroke-linecap="round"
+              style="transition:stroke-dasharray 1.2s cubic-bezier(0.4,0,0.2,1)"/>
+          </svg>
+          <div class="score-number">
+            <div class="score-num">${score}</div>
+            <div class="score-denom">/ 100</div>
+          </div>
+        </div>
+        <div class="score-text">
+          <div class="score-verdict">${verdict.label}<br><em>${verdict.em}</em></div>
+          <p class="score-tagline">${verdict.desc}</p>
+        </div>
+      </div>
+      <div class="score-dims">
+        <div class="score-dim">
+          <div class="dim-val ${getDimLabel(dims.alignment)}">${dims.alignment}</div>
+          <div class="dim-label">Team Alignment</div>
+        </div>
+        <div class="score-dim">
+          <div class="dim-val ${getDimLabel(dims.execution)}">${dims.execution}</div>
+          <div class="dim-label">Execution System</div>
+        </div>
+        <div class="score-dim">
+          <div class="dim-val ${getDimLabel(dims.measurement)}">${dims.measurement}</div>
+          <div class="dim-label">Measurement</div>
+        </div>
+        <div class="score-dim">
+          <div class="dim-val ${getDimLabel(dims.accountability)}">${dims.accountability}</div>
+          <div class="dim-label">Accountability</div>
+        </div>
+        <div class="score-dim">
+          <div class="dim-val ${getDimLabel(dims.vision)}">${dims.vision}</div>
+          <div class="dim-label">Vision Clarity</div>
+        </div>
+      </div>
+    </div>`;
+
+  // AI narrative
+  if (aiNarrative) {
+    const paras = aiNarrative.split('\n').filter(p => p.trim());
+    document.getElementById('aiSummaryBlock').innerHTML = `
+      <div class="ai-summary">
+        <div class="ai-summary-label">✦ Personal Analysis for ${firstName}</div>
+        ${paras.map(p => `<p class="ai-summary-text" style="margin-bottom:14px">${p}</p>`).join('')}
+      </div>`;
+  }
+
+  // Findings
+  const findings = generateFindings(score, dims);
+  document.getElementById('findingsBlock').innerHTML = `
+    <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--forest);margin:24px 0 14px">
+      What Your Scores Reveal
+    </div>
+    ${findings.map(f => `
+      <div class="finding">
+        <div class="finding-head ${f.type}">
+          <span class="finding-badge ${f.type}">${f.type}</span>
+          <span class="finding-title">${f.title}</span>
+        </div>
+        <div class="finding-body">${f.body}</div>
+      </div>`).join('')}`;
+
+  // CTA
+  document.getElementById('ctaBlock').innerHTML = `
+    <div class="results-cta">
+      <h3>Ready to talk about<br><em>your results?</em></h3>
+      <p>Book a free 30-minute call with Guy to walk through your assessment and explore whether Vistage or the Hoshin Planning Accelerator is the right next step.</p>
+      <div>
+        <a href="https://calendly.com/guy-desormes-vistagechair/30min" target="_blank" class="btn-gold" style="display:inline-flex;margin-bottom:12px">
+          Book a 30-Min Call with Guy →
+        </a>
+        <br>
+        <a href="index.html" style="font-size:12.5px;color:rgba(255,255,255,0.4);text-decoration:none">
+          Or learn more at guydesormes.com
+        </a>
+      </div>
+    </div>`;
+
+  document.getElementById('resultsPage').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function generateFindings(score, dims) {
+  const findings = [];
+  const bd = answers.breakdown;
+  const rh = answers.reviewHabits;
+  const al = answers.alignment;
+
+  // Always generate based on their actual answers
+  if (dims.alignment < 50 || al <= 2) {
+    findings.push({
+      type: 'critical',
+      title: 'Leadership misalignment is your biggest execution tax',
+      body: `A team alignment score of ${al}/5 means your leaders are likely working on different priorities without realizing it. Research consistently shows that misaligned leadership teams waste 20–30% of their productive capacity on work that doesn't compound. This isn't a people problem — it's a system problem. The fix is a shared, visible plan that everyone helped build.`
+    });
+  } else if (dims.alignment >= 70) {
+    findings.push({
+      type: 'strength',
+      title: 'Strong team alignment — a real competitive advantage',
+      body: `An alignment score of ${al}/5 is genuinely uncommon. Most leadership teams overestimate how aligned they are until they're asked to independently write down the top 3 priorities. Your challenge isn't getting people pointed in the same direction — it's building the measurement and review infrastructure to sustain and compound that alignment.`
+    });
+  }
+
+  if (bd === 'visibility' || rh === 'no_review' || rh === 'quarterly') {
+    findings.push({
+      type: 'critical',
+      title: 'Your review cadence is leaving you blind until it\'s too late',
+      body: `Finding out a goal is off track in week 13 instead of week 5 means you've spent two months on the wrong thing. A structured monthly review with actuals, variance flags, and countermeasures is the single highest-leverage change most leadership teams can make. It doesn't require more time — it requires replacing an unstructured meeting with a structured one.`
+    });
+  } else if (rh === 'structured') {
+    findings.push({
+      type: 'strength',
+      title: 'Your review rhythm is ahead of most companies your size',
+      body: `A structured monthly and quarterly cadence puts you in the top 20% of companies at your revenue level. The opportunity is to upgrade the quality of what you're reviewing — ensuring goals are SMART enough to generate meaningful variance data, and that countermeasures are specific enough to actually correct course.`
+    });
+  }
+
+  if (bd === 'ownership' || dims.accountability < 40) {
+    findings.push({
+      type: 'critical',
+      title: 'Diffuse accountability means things fall through the cracks',
+      body: `When a goal slips, can you name — within 10 seconds — exactly who owns the outcome? If not, you don't have an accountability problem, you have a design problem. Hoshin's Target Action system assigns one named person (not a team, not a department) to each action. The moment accountability becomes visible, behavior changes.`
+    });
+  }
+
+  if (bd === 'planning' || dims.execution < 40) {
+    findings.push({
+      type: 'warning',
+      title: 'Vague goals are unexecutable by design',
+      body: `"Improve customer satisfaction" cannot be executed. "Increase NPS from 34 to 52 by December 31" can be. The difference between a plan that drives behavior and one that collects dust is almost always goal specificity — measurable baselines, concrete targets, and clear deadlines. This is a fixable structural issue, not a strategy problem.`
+    });
+  }
+
+  if (bd === 'urgent') {
+    findings.push({
+      type: 'warning',
+      title: 'The urgent-beats-important trap is a symptom, not the root cause',
+      body: `When strategic priorities get crowded out by day-to-day fires, the typical response is "we need better discipline." The real fix is structural: when strategic actions are named, owned, and reviewed monthly, they become visible enough to defend against the urgent. Invisible priorities always lose to visible emergencies.`
+    });
+  }
+
+  if (dims.vision < 40) {
+    findings.push({
+      type: 'warning',
+      title: 'A clear vision is the precondition for everything else',
+      body: `Without a specific, time-bound destination — not just a direction — every planning conversation becomes circular. "Which priorities matter most?" is unanswerable without a destination to evaluate them against. The good news is that a compelling vision takes 90 minutes to build in the right facilitated environment, and it unlocks every downstream planning decision.`
+    });
+  }
+
+  // Cap at 4 findings, ensure mix
+  return findings.slice(0, 4);
+}
+
+// ── INIT ──
+updateProgress();
+</script>
+</body>
+</html>
