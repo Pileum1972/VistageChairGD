@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resources for CEOs — Guy Desormes | Vistage Chair</title>
+<meta name="description" content="Curated books, articles, and tools for CEOs who want to lead better, execute faster, and grow continuously.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f1a14;
+  --forest: #1a3327;
+  --moss: #2d5040;
+  --sage: #4a7860;
+  --gold: #b8943a;
+  --gold-light: #d4ad5a;
+  --gold-pale: #f0e4c4;
+  --cream: #faf7f0;
+  --warm-white: #fdfcf9;
+  --parchment: #f2ede0;
+  --border: #d8d4c8;
+  --text: #2a3328;
+  --text-mid: #4a5a50;
+  --text-muted: #7a8a7e;
+  --shadow: 0 2px 20px rgba(15,26,20,0.08), 0 1px 4px rgba(15,26,20,0.05);
+  --shadow-lg: 0 20px 60px rgba(15,26,20,0.15), 0 4px 16px rgba(15,26,20,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--warm-white);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1000; opacity: 0.4;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 20px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(250,247,240,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.nav-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px; font-weight: 600;
+  color: var(--forest); text-decoration: none; line-height: 1.2;
+}
+.nav-brand span {
+  display: block; font-size: 10px;
+  font-family: 'Instrument Sans', sans-serif; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.16em; color: var(--gold); margin-top: 1px;
+}
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  font-size: 13px; font-weight: 500; color: var(--text-mid);
+  text-decoration: none; letter-spacing: 0.04em; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--forest); }
+.nav-links a.active { color: var(--forest); font-weight: 600; }
+.nav-cta {
+  background: var(--gold) !important; color: var(--ink) !important;
+  padding: 10px 22px; border-radius: 3px;
+  font-size: 12.5px !important; font-weight: 600 !important;
+  letter-spacing: 0.06em !important; text-transform: uppercase;
+}
+.nav-cta:hover { background: var(--gold-light) !important; transform: translateY(-1px); }
+
+/* PAGE HEADER */
+.page-header {
+  background: var(--forest);
+  padding: 140px 60px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 90% 50%, rgba(184,148,58,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 5% 80%, rgba(74,120,96,0.12) 0%, transparent 50%);
+}
+.page-header-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.page-header-inner {
+  position: relative; z-index: 2;
+  max-width: 1100px; margin: 0 auto;
+}
+.page-header-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--gold-light); margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
+}
+.page-header-eyebrow::before {
+  content: ''; display: block; width: 32px; height: 1px; background: var(--gold);
+}
+.page-header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(42px, 5vw, 66px); font-weight: 300;
+  color: #fff; line-height: 1.1; letter-spacing: -0.01em;
+  margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards;
+}
+.page-header h1 em { font-style: italic; color: var(--gold-light); }
+.page-header-sub {
+  font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.75;
+  max-width: 560px;
+  opacity: 0; animation: fadeUp 0.8s ease 0.6s forwards;
+}
+
+/* SECTION SHARED */
+.section-label {
+  font-size: 10.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--gold); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-label::after { content: ''; display: block; width: 36px; height: 1px; background: var(--gold); }
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(30px, 3vw, 42px); font-weight: 400;
+  color: var(--forest); line-height: 1.15; letter-spacing: -0.01em;
+}
+.section-title em { font-style: italic; color: var(--gold); }
+
+/* ASSESSMENT FEATURE */
+.section-assessment {
+  background: var(--cream);
+  padding: 80px 60px;
+}
+.assessment-feature {
+  max-width: 1100px; margin: 0 auto;
+  background: var(--forest);
+  border-radius: 8px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+.assessment-feature::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 70% at 80% 50%, rgba(184,148,58,0.08) 0%, transparent 60%);
+}
+.af-content {
+  padding: 52px;
+  position: relative; z-index: 2;
+}
+.af-eyebrow {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--gold-light); margin-bottom: 16px;
+}
+.af-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px; font-weight: 300; color: #fff;
+  line-height: 1.15; margin-bottom: 16px;
+}
+.af-title em { font-style: italic; color: var(--gold-light); }
+.af-desc {
+  font-size: 15px; color: rgba(255,255,255,0.58);
+  line-height: 1.75; margin-bottom: 32px; max-width: 440px;
+}
+.af-features {
+  display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px;
+}
+.af-feature {
+  display: flex; gap: 10px; align-items: center;
+  font-size: 13.5px; color: rgba(255,255,255,0.65);
+}
+.af-check {
+  width: 18px; height: 18px; flex-shrink: 0;
+  background: rgba(184,148,58,0.2); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--gold-light);
+}
+.btn-gold {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--gold); color: var(--ink);
+  padding: 15px 32px; border-radius: 3px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.07em;
+  text-transform: uppercase; text-decoration: none; transition: all 0.2s;
+  font-family: 'Instrument Sans', sans-serif;
+}
+.btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,148,58,0.3); }
+.af-visual {
+  background: rgba(0,0,0,0.2);
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px;
+  position: relative;
+}
+.score-ring-preview {
+  position: relative; width: 180px; height: 180px;
+}
+.score-ring-preview svg { transform: rotate(-90deg); }
+.score-ring-preview .score-num {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px; font-weight: 300; color: #fff; line-height: 1;
+}
+.score-ring-preview .score-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--gold-light); margin-top: 4px;
+}
+
+/* BOOKS */
+.section-books {
+  background: var(--warm-white);
+  padding: 80px 60px;
+}
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+  margin-top: 44px;
+  max-width: 1100px; margin-left: auto; margin-right: auto;
+}
+.book-card {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex; flex-direction: column;
+}
+.book-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.book-spine {
+  height: 180px;
+  display: flex; align-items: flex-end;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.book-spine::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 60%);
+}
+.book-icon {
+  font-size: 40px; position: absolute; bottom: 16px; right: 16px; opacity: 0.15;
+}
+.book-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+.book-category {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.16em; margin-bottom: 8px;
+}
+.book-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 600; color: var(--forest);
+  line-height: 1.25; margin-bottom: 4px;
+}
+.book-author {
+  font-size: 12px; color: var(--text-muted); margin-bottom: 12px;
+}
+.book-why {
+  font-size: 13px; color: var(--text-mid); line-height: 1.6; flex: 1;
+}
+.book-tag {
+  display: inline-block; margin-top: 14px;
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; padding: 4px 10px;
+  border-radius: 2px;
+  align-self: flex-start;
+}
+
+/* ARTICLES */
+.section-articles {
+  background: var(--parchment);
+  padding: 80px 60px;
+}
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 44px;
+  max-width: 1100px; margin-left: auto; margin-right: auto;
+}
+.article-card {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  display: flex; flex-direction: column;
+}
+.article-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.article-card-top {
+  height: 8px;
+  background: var(--gold);
+}
+.article-body { padding: 28px 28px 24px; flex: 1; display: flex; flex-direction: column; }
+.article-source {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--gold); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.article-source::after { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
+.article-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px; font-weight: 600; color: var(--forest);
+  line-height: 1.3; margin-bottom: 12px; flex: 1;
+}
+.article-desc {
+  font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 20px;
+}
+.article-link {
+  font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--gold);
+  display: flex; align-items: center; gap: 6px;
+}
+.article-link::after { content: '→'; transition: transform 0.2s; }
+.article-card:hover .article-link::after { transform: translateX(4px); }
+
+/* CTA STRIP */
+.section-cta-strip {
+  background: var(--ink);
+  padding: 72px 60px;
+  position: relative; overflow: hidden;
+}
+.section-cta-strip::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 80% at 80% 50%, rgba(184,148,58,0.06) 0%, transparent 60%);
+}
+.cta-strip-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 48px;
+  position: relative; z-index: 2;
+}
+.cta-strip-text h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px; font-weight: 300; color: #fff; line-height: 1.15;
+  margin-bottom: 10px;
+}
+.cta-strip-text h2 em { font-style: italic; color: var(--gold-light); }
+.cta-strip-text p { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.7; max-width: 420px; }
+.cta-strip-actions { display: flex; flex-direction: column; gap: 12px; align-items: flex-end; flex-shrink: 0; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--gold); color: var(--ink);
+  padding: 15px 32px; border-radius: 3px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.07em;
+  text-transform: uppercase; text-decoration: none; transition: all 0.2s;
+  font-family: 'Instrument Sans', sans-serif; white-space: nowrap;
+}
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: rgba(255,255,255,0.5);
+  padding: 15px 24px; border-radius: 3px; font-size: 13px; font-weight: 500;
+  text-decoration: none; border: 1px solid rgba(255,255,255,0.15); transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+
+/* FOOTER */
+footer {
+  background: var(--ink); padding: 44px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; color: rgba(255,255,255,0.55); }
+.footer-brand span { display: block; font-size: 10px; font-family: 'Instrument Sans',sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin-top: 2px; }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 12px; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: rgba(255,255,255,0.65); }
+.footer-copy { font-size: 12px; color: rgba(255,255,255,0.22); }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity:0; transform:translateY(24px);} to {opacity:1;transform:translateY(0);} }
+.reveal { opacity:0; transform:translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1 { transition-delay:0.1s; }
+.reveal-delay-2 { transition-delay:0.2s; }
+.reveal-delay-3 { transition-delay:0.3s; }
+.reveal-delay-4 { transition-delay:0.4s; }
+.reveal-delay-5 { transition-delay:0.5s; }
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .page-header, .section-assessment, .section-books, .section-articles, .section-cta-strip { padding: 80px 24px; }
+  .page-header { padding-top: 120px; }
+  .assessment-feature { grid-template-columns: 1fr; }
+  .af-visual { display: none; }
+  .books-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .articles-grid { grid-template-columns: 1fr; }
+  .cta-strip-inner { flex-direction: column; align-items: flex-start; }
+  .cta-strip-actions { align-items: flex-start; }
+  footer { flex-direction: column; gap: 16px; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-brand">
+    Guy Desormes
+    <span>Vistage Chair · Charlotte</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#vistage">Vistage Membership</a>
+    <a href="index.html#about">About Guy</a>
+    <a href="index.html#hoshin">Strategic Planning</a>
+    <a href="resources.html" class="active">Resources</a>
+    <a href="index.html#contact" class="nav-cta">Get in Touch</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<section class="page-header">
+  <div class="page-header-grid"></div>
+  <div class="page-header-inner">
+    <div class="page-header-eyebrow">Free Resources</div>
+    <h1>
+      Tools and reading for CEOs<br>
+      who refuse to stop <em>growing</em>
+    </h1>
+    <p class="page-header-sub">
+      Curated books, research, and assessments Guy recommends to every CEO he works with. No fluff — just the resources that actually change how leaders think and execute.
+    </p>
+  </div>
+</section>
+
+<!-- ASSESSMENT FEATURE -->
+<section class="section-assessment">
+  <div class="assessment-feature reveal">
+    <div class="af-content">
+      <div class="af-eyebrow">Start Here · Free Assessment</div>
+      <div class="af-title">
+        How strong is your<br>
+        <em>execution engine?</em>
+      </div>
+      <p class="af-desc">
+        3 minutes. 8 questions. You'll get a personalized readiness score across 5 dimensions — Vision, Alignment, Execution, Measurement, and Accountability — with specific findings based on your actual answers.
+      </p>
+      <div class="af-features">
+        <div class="af-feature"><div class="af-check">✓</div>Instant score from 0–100 across 5 leadership dimensions</div>
+        <div class="af-feature"><div class="af-check">✓</div>Specific findings — Critical gaps, warnings, and strengths</div>
+        <div class="af-feature"><div class="af-check">✓</div>A clear next step based on where you are right now</div>
+      </div>
+      <a href="assess.html" class="btn-gold">Take the Free Assessment →</a>
+    </div>
+    <div class="af-visual">
+      <div class="score-ring-preview">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle cx="90" cy="90" r="75" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="10"/>
+          <circle cx="90" cy="90" r="75" fill="none" stroke="#b8943a" stroke-width="10"
+            stroke-dasharray="283 471" stroke-dashoffset="0" stroke-linecap="round"/>
+        </svg>
+        <div class="score-num">
+          74
+          <div class="score-label">Your Score</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKS -->
+<section class="section-books">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="section-label reveal">Reading List</div>
+    <h2 class="section-title reveal reveal-delay-1">
+      6 books every CEO should <em>read twice</em>
+    </h2>
+    <p class="reveal reveal-delay-2" style="font-size:14px;color:var(--text-muted);margin-top:10px;line-height:1.7;max-width:560px">Guy's personal picks — the books he returns to and recommends most often in peer group sessions and one-to-ones.</p>
+
+    <div class="books-grid">
+
+      <div class="book-card reveal reveal-delay-1">
+        <div class="book-spine" style="background: linear-gradient(135deg, #1a3327, #2d5040);">
+          <div class="book-icon">🎯</div>
+        </div>
+        <div class="book-body">
+          <div class="book-category" style="color:#b8943a">Leadership · Purpose</div>
+          <div class="book-title">Start With Why</div>
+          <div class="book-author">Simon Sinek</div>
+          <div class="book-why">You can't align a team — or recruit great people — without a clear why. This is the book to give every leader on your team before you tackle strategy.</div>
+          <div class="book-tag" style="background:rgba(184,148,58,0.12);color:#b8943a">Foundational</div>
+        </div>
+      </div>
+
+      <div class="book-card reveal reveal-delay-2">
+        <div class="book-spine" style="background: linear-gradient(135deg, #0f1a14, #1a3327);">
+          <div class="book-icon">📈</div>
+        </div>
+        <div class="book-body">
+          <div class="book-category" style="color:#4a7860">Strategy · Growth</div>
+          <div class="book-title">Good to Great</div>
+          <div class="book-author">Jim Collins</div>
+          <div class="book-why">The Level 5 Leadership and Hedgehog Concept chapters alone are worth the read. Collins answers the question every CEO asks: what separates good companies from truly great ones?</div>
+          <div class="book-tag" style="background:rgba(74,120,96,0.12);color:#4a7860">Classic</div>
+        </div>
+      </div>
+
+      <div class="book-card reveal reveal-delay-3">
+        <div class="book-spine" style="background: linear-gradient(135deg, #3a2a0a, #7a5a20);">
+          <div class="book-icon">🧠</div>
+        </div>
+        <div class="book-body">
+          <div class="book-category" style="color:#b8943a">Mindset · Performance</div>
+          <div class="book-title">Mindset</div>
+          <div class="book-author">Carol S. Dweck</div>
+          <div class="book-why">Growth vs. fixed mindset isn't just personal development — it's the difference between a team that innovates and one that defends. The most important book on continuous improvement culture.</div>
+          <div class="book-tag" style="background:rgba(184,148,58,0.12);color:#b8943a">Foundational</div>
+        </div>
+      </div>
+
+      <div class="book-card reveal reveal-delay-4">
+        <div class="book-spine" style="background: linear-gradient(135deg, #0a1f1a, #163028);">
+          <div class="book-icon">⚙️</div>
+        </div>
+        <div class="book-body">
+          <div class="book-category" style="color:#4a7860">Lean · Operations</div>
+          <div class="book-title">2 Second Lean</div>
+          <div class="book-author">Paul Akers</div>
+          <div class="book-why">The most accessible lean book for CEOs who aren't operations specialists. Akers shows that continuous improvement starts with fixing small things every day — and that culture starts at the top.</div>
+          <div class="book-tag" style="background:rgba(74,120,96,0.12);color:#4a7860">Practical</div>
+        </div>
+      </div>
+
+      <div class="book-card reveal reveal-delay-5">
+        <div class="book-spine" style="background: linear-gradient(135deg, #1a1210, #3a2820);">
+          <div class="book-icon">🏆</div>
+        </div>
+        <div class="book-body">
+          <div class="book-category" style="color:#b8943a">Execution · Team</div>
+          <div class="book-title">The Advantage</div>
+          <div class="book-author">Patrick Lencioni</div>
+          <div class="book-why">Organizational health — not strategy or finance — is the greatest competitive advantage. Bridges everything Vistage and Hoshin are built on: alignment, clarity, and execution that sticks.</div>
+          <div class="book-tag" style="background:rgba(184,148,58,0.12);color:#b8943a">Guy's Pick</div>
+        </div>
+      </div>
+
+      <div class="book-card reveal reveal-delay-5">
+        <div class="book-spine" style="background: linear-gradient(135deg, #1a2a3a, #2a4060);">
+          <div class="book-icon">💼</div>
+        </div>
+        <div class="book-body">
+          <div class="book-category" style="color:#4a7860">Business · Real World</div>
+          <div class="book-title">What They Don't Teach You at Harvard Business School</div>
+          <div class="book-author">Mark H. McCormack</div>
+          <div class="book-why">The street-smart counterpart to every MBA. McCormack covers what actually drives business — reading people, negotiating, selling, and moving fast. Required reading for any CEO who learned the hard way.</div>
+          <div class="book-tag" style="background:rgba(74,120,96,0.12);color:#4a7860">Street Smart</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section class="section-articles">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="section-label reveal">Vistage Research</div>
+    <h2 class="section-title reveal reveal-delay-1">
+      Articles worth <em>reading this week</em>
+    </h2>
+    <p class="reveal reveal-delay-2" style="font-size:14px;color:var(--text-muted);margin-top:10px;line-height:1.7;max-width:560px">Vistage's research center publishes some of the best thinking on CEO leadership available. These three are worth your time.</p>
+
+    <div class="articles-grid" style="margin-top:44px">
+
+      <a href="https://www.vistage.com/research-center/business-growth-strategy/20220311-ceos-think-differently-training-development-budget/" target="_blank" class="article-card reveal reveal-delay-1">
+        <div class="article-card-top"></div>
+        <div class="article-body">
+          <div class="article-source">Vistage Research</div>
+          <div class="article-title">What the Best CEOs Do Differently — and Why It Works</div>
+          <div class="article-desc">There are leaders who stand out from their peers — and it's not their education or industry experience. It's their mindset, habits, and how they develop the people around them.</div>
+          <div class="article-link">Read on Vistage</div>
+        </div>
+      </a>
+
+      <a href="https://www.vistage.com/research-center/business-leadership/20210921-why-every-ceo-needs-a-peer-advisory-group/" target="_blank" class="article-card reveal reveal-delay-2">
+        <div class="article-card-top"></div>
+        <div class="article-body">
+          <div class="article-source">Vistage Research</div>
+          <div class="article-title">Why Every CEO Needs a Peer Advisory Group</div>
+          <div class="article-desc">The best decisions come from outside your company. This piece explains how peer advisory groups give CEOs the unbiased feedback, accountability, and diverse perspectives they can't get anywhere else.</div>
+          <div class="article-link">Read on Vistage</div>
+        </div>
+      </a>
+
+      <a href="https://www.vistage.com/research-center/business-leadership/20240321-ceo-isolation-decision-making/" target="_blank" class="article-card reveal reveal-delay-3">
+        <div class="article-card-top"></div>
+        <div class="article-body">
+          <div class="article-source">Vistage Research</div>
+          <div class="article-title">How CEOs Can Overcome Isolation and Improve Decision-Making</div>
+          <div class="article-desc">Effective CEOs don't accept isolation as the price of leadership. Here are the proven strategies for building the outside perspective that drives better decisions and stronger results.</div>
+          <div class="article-link">Read on Vistage</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<section class="section-cta-strip">
+  <div class="cta-strip-inner">
+    <div class="cta-strip-text reveal">
+      <h2>
+        Resources are a start.<br>
+        <em>Peer advisory is the edge.</em>
+      </h2>
+      <p>The best CEOs don't just read about leading better — they surround themselves with people who hold them to it. That's what Vistage is for.</p>
+    </div>
+    <div class="cta-strip-actions reveal reveal-delay-2">
+      <a href="https://calendly.com/guy-desormes-vistagechair/30min" target="_blank" class="btn-primary">
+        Book a Call with Guy →
+      </a>
+      <a href="assess.html" class="btn-ghost">
+        Take the Free Assessment
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    Guy Desormes
+    <span>Vistage Chair · Charlotte Region</span>
+  </div>
+  <div class="footer-links">
+    <a href="index.html#vistage">Vistage</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#hoshin">Strategic Planning</a>
+    <a href="resources.html">Resources</a>
+    <a href="assess.html">Assessment</a>
+  </div>
+  <div class="footer-copy">© 2026 · Guy Desormes · All rights reserved</div>
+</footer>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
